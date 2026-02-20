@@ -11,7 +11,7 @@ export function HeroSection() {
     const locale = pathname.split('/')[1] || 'en';
 
     return (
-        <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden hero-gradient grid-pattern">
+        <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden hero-gradient grid-pattern">
             {/* Floating Orbs */}
             <motion.div
                 className="absolute top-20 right-[15%] w-72 h-72 rounded-full pointer-events-none"
@@ -32,7 +32,7 @@ export function HeroSection() {
                 transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
             />
 
-            <div className="section-container relative z-10 pt-32 pb-20">
+            <div className="section-container relative z-10 pt-24 pb-16">
                 <div className="max-w-4xl mx-auto text-center">
                     {/* Badge */}
                     <motion.div

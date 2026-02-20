@@ -90,7 +90,7 @@ export function FeaturedListings() {
     const t = useTranslations('featured');
 
     return (
-        <section className="py-20 md:py-28" style={{ background: 'var(--color-surface-50)' }}>
+        <section className="py-14 md:py-20" style={{ background: 'var(--color-surface-50)' }}>
             <div className="section-container">
                 {/* Header */}
                 <motion.div

@@ -208,7 +208,7 @@ export function TopAgents() {
 
     return (
         <section
-            className="py-20 md:py-28 relative overflow-hidden"
+            className="py-14 md:py-20 relative overflow-hidden"
             style={{ background: 'var(--color-surface-50)' }}
         >
             {/* Background decoration */}

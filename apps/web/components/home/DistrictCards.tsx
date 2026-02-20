@@ -240,7 +240,7 @@ export function DistrictCards() {
     const t = useTranslations('districts');
 
     return (
-        <section className="py-20 md:py-28">
+        <section className="py-14 md:py-20">
             <div className="section-container">
                 {/* Header */}
                 <motion.div

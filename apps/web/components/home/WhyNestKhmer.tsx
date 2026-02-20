@@ -43,7 +43,7 @@ export function WhyNestKhmer() {
     const t = useTranslations('why');
 
     return (
-        <section className="py-20 md:py-28">
+        <section className="py-14 md:py-20">
             <div className="section-container">
                 {/* Header */}
                 <motion.div

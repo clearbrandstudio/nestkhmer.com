@@ -14,7 +14,7 @@ const navItems = [
     { icon: Megaphone, label: 'Ad Campaigns', path: '/admin/ads' },
     { icon: FileText, label: 'Blog', path: '/admin/blog' },
     { icon: BookOpen, label: 'Pages', path: '/admin/pages' },
-    { icon: TrendingUp, label: 'Insights', path: '/admin/insights' },
+    { icon: TrendingUp, label: 'Insights', path: '/insights', external: true },
     { icon: Globe, label: 'SEO', path: '/admin/seo' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
 ];
@@ -45,9 +45,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </div>
                 </div>
                 <nav className="flex-1 py-4 px-3 space-y-0.5">
-                    {navItems.map(item => {
+                    {navItems.map((item: { icon: typeof LayoutDashboard; label: string; path: string; external?: boolean }) => {
                         const Icon = item.icon;
-                        const isActive = pathname.includes(item.path);
+                        const isActive = item.external ? pathname.includes(item.path) : pathname.includes(item.path);
                         return (
                             <a key={item.path} href={`/${locale}${item.path}`} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm no-underline transition-all" style={{ background: isActive ? 'rgba(139,79,255,0.15)' : 'transparent', color: isActive ? 'var(--color-brand-300)' : 'var(--color-surface-400)', fontWeight: isActive ? 600 : 400 }}>
                                 <Icon className="w-4 h-4" />{item.label}

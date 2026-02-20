@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { AdSlot } from '@/components/ads/AdSlot';
 
 const posts = [
     { title: 'BKK1 Rental Market Report Q4 2025', excerpt: 'Deep dive into BKK1 rental trends — median prices, vacancy rates, and what to expect in 2026.', image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&h=400&fit=crop', category: 'Market Reports', date: 'Feb 15, 2026', readTime: '8 min', slug: 'bkk1-rental-market-q4-2025' },
@@ -48,18 +49,26 @@ export default function BlogPage() {
                 {/* Post Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {posts.slice(1).map((p, i) => (
-                        <motion.a key={p.slug} href={`/${locale}/blog/${p.slug}`} className="glass-card overflow-hidden no-underline group" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} whileHover={{ y: -4 }}>
-                            <div className="h-44 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url(${p.image})` }} />
-                            <div className="p-5">
-                                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: 'var(--color-brand-50)', color: 'var(--color-brand-600)' }}>{p.category}</span>
-                                <h3 className="text-base font-bold mt-2 mb-2 line-clamp-2" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>{p.title}</h3>
-                                <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--color-surface-500)' }}>{p.excerpt}</p>
-                                <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--color-surface-400)' }}>
-                                    <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{p.date}</span>
-                                    <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{p.readTime}</span>
+                        <>
+                            <motion.a key={p.slug} href={`/${locale}/blog/${p.slug}`} className="glass-card overflow-hidden no-underline group" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} whileHover={{ y: -4 }}>
+                                <div className="h-44 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url(${p.image})` }} />
+                                <div className="p-5">
+                                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: 'var(--color-brand-50)', color: 'var(--color-brand-600)' }}>{p.category}</span>
+                                    <h3 className="text-base font-bold mt-2 mb-2 line-clamp-2" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>{p.title}</h3>
+                                    <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--color-surface-500)' }}>{p.excerpt}</p>
+                                    <div className="flex items-center gap-3 text-xs" style={{ color: 'var(--color-surface-400)' }}>
+                                        <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{p.date}</span>
+                                        <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{p.readTime}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </motion.a>
+                            </motion.a>
+                            {/* Inline ad after 2nd blog post */}
+                            {i === 1 && (
+                                <motion.div key="blog-inline-ad" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center justify-center">
+                                    <AdSlot zone="blog-inline" />
+                                </motion.div>
+                            )}
+                        </>
                     ))}
                 </div>
             </div>

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { ListingCard } from '@/components/home/ListingCard';
+import { AdSlot } from '@/components/ads/AdSlot';
 import { Search, SlidersHorizontal, MapPin, Grid3X3, List, Map } from 'lucide-react';
 import { useState } from 'react';
 
@@ -70,12 +71,25 @@ export default function ListingsPage() {
                     </div>
                 </div>
 
+                {/* Search Top Ad */}
+                <div className="mb-6">
+                    <AdSlot zone="search-top" />
+                </div>
+
                 {/* Results Grid */}
                 <div className={view === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
                     {allListings.map((listing, i) => (
-                        <motion.div key={listing.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
-                            <ListingCard {...listing} />
-                        </motion.div>
+                        <>
+                            <motion.div key={listing.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+                                <ListingCard {...listing} />
+                            </motion.div>
+                            {/* Inline ad after 3rd listing */}
+                            {i === 2 && view === 'grid' && (
+                                <motion.div key="search-mid-ad" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="flex items-center justify-center">
+                                    <AdSlot zone="search-mid" />
+                                </motion.div>
+                            )}
+                        </>
                     ))}
                 </div>
 

@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ChevronLeft, Share2 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { AdSlot } from '@/components/ads/AdSlot';
 
 export default function BlogPostPage() {
     const pathname = usePathname();
@@ -37,6 +38,11 @@ export default function BlogPostPage() {
                             <p className="text-sm mb-3" style={{ color: 'var(--color-surface-500)' }}>Connect with a verified agent who specializes in BKK1.</p>
                             <a href={`/${locale}/agents`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold no-underline" style={{ background: 'var(--color-brand-600)', color: 'white', fontFamily: 'var(--font-heading)' }}>Find a BKK1 Agent</a>
                         </div>
+                    </div>
+
+                    {/* Blog Detail Ad */}
+                    <div className="mt-10">
+                        <AdSlot zone="blog-detail" />
                     </div>
                 </motion.div>
             </article>

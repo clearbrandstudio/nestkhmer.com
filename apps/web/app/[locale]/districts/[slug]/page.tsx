@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ListingCard } from '@/components/home/ListingCard';
 import { TrendingUp, Home, Clock, MapPin, ChevronLeft } from 'lucide-react';
 import { usePathname, useParams } from 'next/navigation';
+import { AdSlot } from '@/components/ads/AdSlot';
 
 const districtData: Record<string, any> = {
     bkk1: { name: 'BKK1', nameKm: 'បឹងកេងកង១', image: 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1200&h=400&fit=crop', medianRent: 850, listings: 324, avgDays: 6, walkability: 92, description: 'The expat heartland of Phnom Penh. BKK1 is the most sought-after neighbourhood — packed with international restaurants, boutique cafes, co-working spaces, and premium apartments. Walking distance to everything.' },
@@ -37,13 +38,26 @@ export default function DistrictDetailPage() {
                         return <div key={s.label} className="glass-card p-4 text-center" style={{ borderRadius: 'var(--radius-xl)' }}><Icon className="w-5 h-5 mx-auto mb-2" style={{ color: s.color }} /><div className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>{s.val}</div><div className="text-xs" style={{ color: 'var(--color-surface-400)' }}>{s.label}</div></div>;
                     })}
                 </div>
-                <div className="glass-card p-6 mb-8" style={{ borderRadius: 'var(--radius-xl)' }}>
-                    <h2 className="text-xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>About {d.name}</h2>
-                    <p className="text-sm leading-relaxed" style={{ color: 'var(--color-surface-600)' }}>{d.description}</p>
-                </div>
-                <h2 className="text-xl font-bold mb-6" style={{ fontFamily: 'var(--font-heading)' }}>Listings in {d.name}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {listings.map((l, i) => <motion.div key={l.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}><ListingCard {...l} /></motion.div>)}
+
+                {/* Main content + sidebar */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_200px] gap-8">
+                    <div>
+                        <div className="glass-card p-6 mb-8" style={{ borderRadius: 'var(--radius-xl)' }}>
+                            <h2 className="text-xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>About {d.name}</h2>
+                            <p className="text-sm leading-relaxed" style={{ color: 'var(--color-surface-600)' }}>{d.description}</p>
+                        </div>
+                        <h2 className="text-xl font-bold mb-6" style={{ fontFamily: 'var(--font-heading)' }}>Listings in {d.name}</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {listings.map((l, i) => <motion.div key={l.title} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }}><ListingCard {...l} /></motion.div>)}
+                        </div>
+                    </div>
+
+                    {/* District Sidebar Ad */}
+                    <div className="hidden lg:block">
+                        <div className="sticky top-24">
+                            <AdSlot zone="district-sidebar" />
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

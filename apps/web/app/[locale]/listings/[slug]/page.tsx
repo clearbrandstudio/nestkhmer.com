@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, MapPin, Bed, Bath, Maximize, Building, Calendar, Plug, Droplets, PawPrint, Car, Wifi, Phone, Mail, Send, ChevronLeft, Share2, X, ChevronRight as ChevronRightIcon, Eye, MousePointerClick } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useState, useCallback, useEffect } from 'react';
+import { AdSlot } from '@/components/ads/AdSlot';
 
 const listing = {
     title: 'Modern Studio with Mekong View',
@@ -223,6 +224,11 @@ export default function ListingDetailPage() {
                                 All contact clicks are tracked to measure listing effectiveness
                             </p>
                         </div>
+
+                        {/* Bottom Ad */}
+                        <div className="mt-6">
+                            <AdSlot zone="listing-bottom" />
+                        </div>
                     </div>
 
                     {/* Sidebar — Agent Card */}
@@ -287,6 +293,11 @@ export default function ListingDetailPage() {
                                     {(listing.stats.messageClicks + listing.stats.callClicks + listing.stats.telegramClicks)} people contacted this agent
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Sidebar Ad */}
+                        <div className="mt-6">
+                            <AdSlot zone="listing-sidebar" />
                         </div>
                     </div>
                 </div>

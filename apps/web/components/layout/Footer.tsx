@@ -35,6 +35,7 @@ export function Footer() {
 
     const resourceLinks = [
         { label: t('advertise'), href: `/${currentLocale}/advertise` },
+        { label: 'Insights', href: `/${currentLocale}/insights` },
         { label: t('privacy'), href: '#' },
         { label: t('terms'), href: '#' },
     ];

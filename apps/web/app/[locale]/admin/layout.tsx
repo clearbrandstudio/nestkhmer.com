@@ -3,7 +3,7 @@
 import { useAuth } from '@/lib/auth-context';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { LayoutDashboard, Building2, Users, Megaphone, BarChart3, FileText, MapPin, Settings, LogOut, Shield, Globe } from 'lucide-react';
+import { LayoutDashboard, Building2, Users, Megaphone, BarChart3, FileText, MapPin, Settings, LogOut, Shield, Globe, BookOpen, TrendingUp } from 'lucide-react';
 
 const navItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin/dashboard' },
@@ -13,6 +13,8 @@ const navItems = [
     { icon: MapPin, label: 'Districts', path: '/admin/districts' },
     { icon: Megaphone, label: 'Ad Campaigns', path: '/admin/ads' },
     { icon: FileText, label: 'Blog', path: '/admin/blog' },
+    { icon: BookOpen, label: 'Pages', path: '/admin/pages' },
+    { icon: TrendingUp, label: 'Insights', path: '/admin/insights' },
     { icon: Globe, label: 'SEO', path: '/admin/seo' },
     { icon: Settings, label: 'Settings', path: '/admin/settings' },
 ];

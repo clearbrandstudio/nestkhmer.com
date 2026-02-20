@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import { FileText, Plus, Search, Filter, MoreVertical, Eye, Edit3, Trash2, Globe, Calendar, Clock } from 'lucide-react';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const mockPages = [
     { id: 1, title: 'BKK1 Neighbourhood Guide', slug: 'bkk1-neighbourhood-guide', type: 'page' as const, status: 'published' as const, locale: 'en', views: 2340, updatedAt: '2026-02-18', author: 'Admin' },
@@ -19,6 +20,7 @@ const statusColors: Record<string, { bg: string; text: string }> = {
 };
 
 export default function AdminPages() {
+    const pathname = usePathname();
     const [filter, setFilter] = useState<'all' | 'page' | 'post'>('all');
     const [search, setSearch] = useState('');
     const filtered = mockPages.filter(p => (filter === 'all' || p.type === filter) && p.title.toLowerCase().includes(search.toLowerCase()));
@@ -30,7 +32,7 @@ export default function AdminPages() {
                     <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Pages & Posts</h1>
                     <p className="text-sm" style={{ color: 'var(--color-surface-500)' }}>Create custom pages, blog posts, and market reports</p>
                 </div>
-                <a href="editor" className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold no-underline" style={{ background: 'var(--color-brand-600)', color: 'white' }}>
+                <a href={`/${pathname.split('/')[1] || 'en'}/admin/pages/editor`} className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold no-underline" style={{ background: 'var(--color-brand-600)', color: 'white' }}>
                     <Plus className="w-4 h-4" />New Page
                 </a>
             </div>

@@ -1,0 +1,43 @@
+# NestKhmer — Cambodia's Rental Intelligence Platform
+
+> NestKhmer is Cambodia's premier property rental platform focused on transparency, fresh listings, and agent accountability.
+
+## What We Do
+
+NestKhmer helps tenants find verified rental properties in Phnom Penh, Cambodia. Every listing is maximum 14 days old. Every agent is rated by our proprietary NestScore system based on responsiveness, listing quality, and conversion rates.
+
+## Key Features
+
+- **Fresh Listings Only**: Auto-expire after 14 days. If it's listed, it's available.
+- **NestScore**: Proprietary agent rating system measuring responsiveness, listing quality, and conversion rates.
+- **Trilingual Support**: Full platform in English, Khmer, and Mandarin.
+- **Transparent Data**: Electric rates, water rates, pet policies, and building details on every listing.
+- **District Intelligence**: Median rents, walkability scores, and trend data for every Phnom Penh district.
+
+## Available Data
+
+### Listings
+Each property listing includes: title, district, address, price per month, deposit, lease terms, size (sqm), bedrooms, bathrooms, floor, year built, furnishing status, pet policy, electric rate, water rate, internet, parking, description, and multiple photos.
+
+### Agents
+Each agent profile includes: name, agency, NestScore rating, response rate, average response time, number of listings, leads converted, languages spoken, bio, and active listings.
+
+### Districts
+Each district page includes: median rent, active listings count, average time to let, walkability score, and available properties.
+
+## Content Types
+
+- `/en/listings` — Browse all rental listings in Phnom Penh
+- `/en/listings/[slug]` — Individual listing details with full specifications
+- `/en/agents` — Browse verified rental agents
+- `/en/agents/[slug]` — Individual agent profiles with NestScore
+- `/en/districts` — Explore Phnom Penh districts with rental data
+- `/en/districts/[slug]` — District detail with market trends
+- `/en/blog` — Market reports and rental intelligence articles
+
+## Contact
+
+- Website: https://nestkhmer.com
+- Email: hello@nestkhmer.com
+- Telegram: https://t.me/nestkhmer
+- Location: Phnom Penh, Cambodia

@@ -1,0 +1,81 @@
+{
+    "nav": {
+        "search": "搜索",
+        "listings": "房源",
+        "districts": "区域",
+        "agents": "经纪人",
+        "blog": "博客",
+        "forAgents": "经纪人入驻",
+        "listProperty": "发布房源",
+        "searchPlaceholder": "按区域、街道或关键词搜索..."
+    },
+    "hero": {
+        "headline": "您在金边的下一个家",
+        "headlineAccent": "告别过期房源",
+        "sub": "NestKhmer上的每条房源都是实时、最新且详细的。我们删除旧信息，不浪费您的时间。",
+        "ctaPrimary": "搜索公寓",
+        "ctaSecondary": "免费发布房源",
+        "searchPlaceholder": "搜索 BKK1、堆谷、河畔..."
+    },
+    "featured": {
+        "title": "精选房源",
+        "subtitle": "精心挑选，14天内验证新鲜",
+        "viewAll": "查看全部",
+        "perMonth": "/月",
+        "bedrooms": "{count}卧",
+        "bathrooms": "{count}卫",
+        "sqm": "{count}平方米",
+        "floor": "{count}楼"
+    },
+    "districts": {
+        "title": "探索金边",
+        "subtitle": "每个社区都有自己的故事。找到属于你的。",
+        "medianRent": "中位租金",
+        "newThisWeek": "本周新增",
+        "avgSize": "平均面积",
+        "explore": "探索{district}",
+        "viewAll": "所有区域"
+    },
+    "agents": {
+        "title": "本周最佳经纪人",
+        "subtitle": "按响应速度、房源质量和认证排名",
+        "responseRate": "响应率",
+        "avgResponse": "平均响应",
+        "activeListings": "活跃房源",
+        "viewProfile": "查看资料",
+        "viewAll": "所有经纪人",
+        "minutes": "{count}分钟",
+        "hours": "{count}小时"
+    },
+    "why": {
+        "title": "为什么选择 NestKhmer",
+        "subtitle": "关于柬埔寨租房的四个真相",
+        "truth1Title": "14天新鲜保证",
+        "truth1Desc": "每条房源最长14天。不续期的经纪人会被隐藏。您再也不会因为拨打一个3个月前已出租的房源电话而浪费时间。",
+        "truth2Title": "经纪人评级",
+        "truth2Desc": "经纪人按回复速度评级。选择最好的，忽略其余的。",
+        "truth3Title": "完全透明",
+        "truth3Desc": "我们展示旧网站不告诉您的：电费、押金月数、宠物政策、水费。签约时不会有意外。",
+        "truth4Title": "您的语言",
+        "truth4Desc": "用英语、高棉语或中文搜索。按您的方式浏览。"
+    },
+    "stats": {
+        "activeListings": "活跃房源",
+        "verifiedAgents": "认证经纪人",
+        "districtsServed": "覆盖区域",
+        "avgResponseTime": "平均响应时间"
+    },
+    "footer": {
+        "tagline": "只有新鲜房源。只有真实结果。",
+        "company": "公司",
+        "about": "关于我们",
+        "blog": "博客",
+        "contact": "联系我们",
+        "forAgents": "经纪人入驻",
+        "resources": "资源",
+        "advertise": "广告合作",
+        "privacy": "隐私政策",
+        "terms": "服务条款",
+        "copyright": "© 2026 NestKhmer。保留所有权利。"
+    }
+}

@@ -1,0 +1,81 @@
+{
+    "nav": {
+        "search": "Search",
+        "listings": "Listings",
+        "districts": "Districts",
+        "agents": "Agents",
+        "blog": "Blog",
+        "forAgents": "For Agents",
+        "listProperty": "List Your Property",
+        "searchPlaceholder": "Search by district, street, or keyword..."
+    },
+    "hero": {
+        "headline": "Your Next Home in Phnom Penh",
+        "headlineAccent": "Without the Stale Listings",
+        "sub": "Every listing on NestKhmer is live, fresh, and fully detailed. We delete the old stuff so you don't waste your time.",
+        "ctaPrimary": "Search Apartments",
+        "ctaSecondary": "List Your Property Free",
+        "searchPlaceholder": "Search BKK1, Toul Kork, Riverside..."
+    },
+    "featured": {
+        "title": "Featured Listings",
+        "subtitle": "Handpicked homes, all verified fresh within 14 days",
+        "viewAll": "View All Listings",
+        "perMonth": "/month",
+        "bedrooms": "{count} Bed",
+        "bathrooms": "{count} Bath",
+        "sqm": "{count} sqm",
+        "floor": "Floor {count}"
+    },
+    "districts": {
+        "title": "Explore Phnom Penh",
+        "subtitle": "Every neighbourhood tells a story. Find yours.",
+        "medianRent": "Median Rent",
+        "newThisWeek": "New This Week",
+        "avgSize": "Avg Size",
+        "explore": "Explore {district}",
+        "viewAll": "All Districts"
+    },
+    "agents": {
+        "title": "Top Agents This Week",
+        "subtitle": "Ranked by responsiveness, listing quality, and verified leads",
+        "responseRate": "Response Rate",
+        "avgResponse": "Avg Response",
+        "activeListings": "Active Listings",
+        "viewProfile": "View Profile",
+        "viewAll": "All Agents",
+        "minutes": "{count}m",
+        "hours": "{count}h"
+    },
+    "why": {
+        "title": "Why NestKhmer",
+        "subtitle": "Four honest truths about renting in Cambodia",
+        "truth1Title": "14-Day Freshness Guarantee",
+        "truth1Desc": "Every listing is maximum 14 days old. Agents who don't renew get hidden. You'll never call a number for an apartment that was rented 3 months ago.",
+        "truth2Title": "Agents Are Rated",
+        "truth2Desc": "Agents are rated by how fast they respond to you. Hire the best. Ignore the rest.",
+        "truth3Title": "Full Transparency",
+        "truth3Desc": "We show you what the old sites don't: electric rates, deposit in months, pet policy, water rates. No surprises when you sign.",
+        "truth4Title": "Your Language",
+        "truth4Desc": "Search in English, Khmer, or Chinese. Browse how you think."
+    },
+    "stats": {
+        "activeListings": "Active Listings",
+        "verifiedAgents": "Verified Agents",
+        "districtsServed": "Districts Covered",
+        "avgResponseTime": "Avg Response Time"
+    },
+    "footer": {
+        "tagline": "Only Fresh Listings. Only Real Results.",
+        "company": "Company",
+        "about": "About Us",
+        "blog": "Blog",
+        "contact": "Contact",
+        "forAgents": "For Agents",
+        "resources": "Resources",
+        "advertise": "Advertise",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service",
+        "copyright": "© 2026 NestKhmer. All rights reserved."
+    }
+}

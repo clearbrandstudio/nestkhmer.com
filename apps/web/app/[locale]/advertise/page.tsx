@@ -9,10 +9,15 @@ const allZones = Object.keys(AD_ZONE_META) as AdZone[];
 
 export default function AdvertisePage() {
     const [selectedZone, setSelectedZone] = useState<AdZone>('homepage-hero');
+    const [adLang, setAdLang] = useState<'en' | 'km' | 'zh'>('en');
     const [formData, setFormData] = useState({
         companyName: '',
         title: '',
+        titleKm: '',
+        titleZh: '',
         description: '',
+        descriptionKm: '',
+        descriptionZh: '',
         destinationUrl: '',
         ctaText: 'Learn More',
         budget: '$499',
@@ -148,36 +153,68 @@ export default function AdvertisePage() {
                                     />
                                 </div>
 
-                                {/* Ad Title */}
+                                {/* Multi-Language Headline & Description */}
                                 <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-surface-700)' }}>Ad Headline</label>
+                                    <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-surface-700)' }}>Ad Content</label>
+                                    {/* Language tabs */}
+                                    <div className="flex gap-1 mb-3 p-1 rounded-xl" style={{ background: 'var(--color-surface-100)' }}>
+                                        {([['en', '🇬🇧 English'], ['km', '🇰🇭 ខ្មែរ'], ['zh', '🇨🇳 中文']] as const).map(([code, label]) => (
+                                            <button
+                                                key={code}
+                                                type="button"
+                                                onClick={() => setAdLang(code)}
+                                                className="flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all"
+                                                style={{
+                                                    background: adLang === code ? 'white' : 'transparent',
+                                                    color: adLang === code ? 'var(--color-brand-700)' : 'var(--color-surface-500)',
+                                                    boxShadow: adLang === code ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
+                                                }}
+                                            >
+                                                {label}
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    {/* Headline */}
                                     <input
                                         type="text"
-                                        value={formData.title}
-                                        onChange={(e) => setFormData(p => ({ ...p, title: e.target.value }))}
-                                        className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+                                        value={adLang === 'en' ? formData.title : adLang === 'km' ? formData.titleKm : formData.titleZh}
+                                        onChange={(e) => {
+                                            const key = adLang === 'en' ? 'title' : adLang === 'km' ? 'titleKm' : 'titleZh';
+                                            setFormData(p => ({ ...p, [key]: e.target.value }));
+                                        }}
+                                        className="w-full px-4 py-3 rounded-xl text-sm outline-none mb-1"
                                         style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)', color: 'var(--color-surface-800)' }}
-                                        placeholder="e.g., Premium Island Living"
+                                        placeholder={adLang === 'en' ? 'Headline (English)' : adLang === 'km' ? 'ចំណងជើង (ខ្មែរ)' : '标题 (中文)'}
                                         maxLength={60}
-                                        required
+                                        required={adLang === 'en'}
                                     />
-                                    <span className="text-[10px] mt-1 block" style={{ color: 'var(--color-surface-400)' }}>{formData.title.length}/60 characters</span>
-                                </div>
+                                    <span className="text-[10px] block mb-3" style={{ color: 'var(--color-surface-400)' }}>
+                                        {(adLang === 'en' ? formData.title : adLang === 'km' ? formData.titleKm : formData.titleZh).length}/60 characters
+                                    </span>
 
-                                {/* Description */}
-                                <div>
-                                    <label className="block text-sm font-semibold mb-2" style={{ color: 'var(--color-surface-700)' }}>Description</label>
+                                    {/* Description */}
                                     <textarea
-                                        value={formData.description}
-                                        onChange={(e) => setFormData(p => ({ ...p, description: e.target.value }))}
+                                        value={adLang === 'en' ? formData.description : adLang === 'km' ? formData.descriptionKm : formData.descriptionZh}
+                                        onChange={(e) => {
+                                            const key = adLang === 'en' ? 'description' : adLang === 'km' ? 'descriptionKm' : 'descriptionZh';
+                                            setFormData(p => ({ ...p, [key]: e.target.value }));
+                                        }}
                                         className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none"
                                         style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)', color: 'var(--color-surface-800)' }}
-                                        placeholder="Short description of your offer..."
+                                        placeholder={adLang === 'en' ? 'Short description...' : adLang === 'km' ? 'ការពិពណ៌នាខ្លី...' : '简短描述...'}
                                         rows={2}
                                         maxLength={120}
-                                        required
+                                        required={adLang === 'en'}
                                     />
-                                    <span className="text-[10px] mt-1 block" style={{ color: 'var(--color-surface-400)' }}>{formData.description.length}/120 characters</span>
+                                    <div className="flex items-center justify-between mt-1">
+                                        <span className="text-[10px]" style={{ color: 'var(--color-surface-400)' }}>
+                                            {(adLang === 'en' ? formData.description : adLang === 'km' ? formData.descriptionKm : formData.descriptionZh).length}/120 characters
+                                        </span>
+                                        <span className="text-[10px]" style={{ color: 'var(--color-fresh-500)' }}>
+                                            {formData.titleKm || formData.titleZh ? '✓ Multi-language' : 'Optional: add KH/ZH for 3× reach'}
+                                        </span>
+                                    </div>
                                 </div>
 
                                 {/* Creative Upload */}

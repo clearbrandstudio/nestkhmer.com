@@ -58,7 +58,7 @@ export default function ForAgentsPage() {
             </section>
 
             {/* Pricing */}
-            <section className="py-20">
+            <section className="py-20 pb-24">
                 <div className="section-container">
                     <h2 className="text-3xl font-bold text-center mb-4" style={{ fontFamily: 'var(--font-heading)' }}>Simple, Transparent Pricing</h2>
                     <p className="text-center mb-12" style={{ color: 'var(--color-surface-500)' }}>Start free. Upgrade when you&apos;re ready to grow.</p>

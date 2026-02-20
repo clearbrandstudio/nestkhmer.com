@@ -55,6 +55,7 @@ interface ListingCardProps {
     floor: number;
     daysOld: number;
     agentScore: number;
+    propertyId?: string;
 }
 
 export function ListingCard({
@@ -69,6 +70,7 @@ export function ListingCard({
     floor,
     daysOld,
     agentScore,
+    propertyId,
 }: ListingCardProps) {
     const t = useTranslations('featured');
     const locale = useLocale();
@@ -143,17 +145,24 @@ export function ListingCard({
                         ))}
                     </div>
 
-                    {/* Price */}
-                    <div className="flex items-baseline gap-1">
-                        <span
-                            className="text-xl font-bold"
-                            style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-brand-700)' }}
-                        >
-                            ${price}
-                        </span>
-                        <span className="text-sm" style={{ color: 'var(--color-surface-400)' }}>
-                            {t('perMonth')}
-                        </span>
+                    {/* Price + Property ID */}
+                    <div className="flex items-baseline justify-between">
+                        <div className="flex items-baseline gap-1">
+                            <span
+                                className="text-xl font-bold"
+                                style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-brand-700)' }}
+                            >
+                                ${price}
+                            </span>
+                            <span className="text-sm" style={{ color: 'var(--color-surface-400)' }}>
+                                {t('perMonth')}
+                            </span>
+                        </div>
+                        {propertyId && (
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded" style={{ background: 'var(--color-surface-50)', color: 'var(--color-surface-400)', border: '1px solid var(--color-surface-100)' }}>
+                                {propertyId}
+                            </span>
+                        )}
                     </div>
                 </div>
             </motion.div>

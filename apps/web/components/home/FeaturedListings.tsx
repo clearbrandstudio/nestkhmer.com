@@ -17,6 +17,7 @@ const mockListings = [
         floor: 12,
         daysOld: 1,
         agentScore: 92,
+        propertyId: 'NK-BKK1-2026-0042',
     },
     {
         image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop',
@@ -29,6 +30,7 @@ const mockListings = [
         floor: 5,
         daysOld: 3,
         agentScore: 87,
+        propertyId: 'NK-TK-2026-0044',
     },
     {
         image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=500&fit=crop',
@@ -41,6 +43,7 @@ const mockListings = [
         floor: 28,
         daysOld: 0,
         agentScore: 95,
+        propertyId: 'NK-KP-2026-0067',
     },
     {
         image: 'https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=800&h=500&fit=crop',
@@ -53,6 +56,7 @@ const mockListings = [
         floor: 3,
         daysOld: 8,
         agentScore: 78,
+        propertyId: 'NK-TTP-2026-0203',
     },
     {
         image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop',
@@ -65,6 +69,7 @@ const mockListings = [
         floor: 1,
         daysOld: 5,
         agentScore: 91,
+        propertyId: 'NK-SS-2026-0012',
     },
     {
         image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop',
@@ -77,6 +82,7 @@ const mockListings = [
         floor: 8,
         daysOld: 12,
         agentScore: 84,
+        propertyId: 'NK-DP-2026-0118',
     },
 ];
 

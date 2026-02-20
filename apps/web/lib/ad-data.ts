@@ -21,7 +21,11 @@ export interface Ad {
     zone: AdZone;
     advertiser: string;
     title: string;
+    titleKm?: string;
+    titleZh?: string;
     description: string;
+    descriptionKm?: string;
+    descriptionZh?: string;
     imageUrl: string;
     linkUrl: string;
     cta: string;
@@ -58,7 +62,11 @@ export const MOCK_ADS: Ad[] = [
         zone: 'homepage-hero',
         advertiser: 'Koh Pich Realty',
         title: 'Premium Island Living — Diamond Island',
+        titleKm: 'រស់នៅកោះពេជ្រ — ផ្ទះល្វែងប្រណីត',
+        titleZh: '钻石岛高端岛居生活',
         description: 'Luxury waterfront apartments from $1,200/mo. Pool, gym, river views.',
+        descriptionKm: 'ផ្ទះល្វែងផ្នែកទឹកចាប់ពី $1,200/ខែ។ អាងហែលទឹក កីឡាដ្ឋាន ទេសភាពទន្លេ។',
+        descriptionZh: '奢华河景公寓，月租$1,200起。泳池、健身房、河景。',
         imageUrl: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=728&h=90&fit=crop',
         linkUrl: 'https://example.com/koh-pich',
         cta: 'View Properties',
@@ -78,7 +86,11 @@ export const MOCK_ADS: Ad[] = [
         zone: 'search-mid',
         advertiser: 'Pacific Insurance',
         title: 'Tenant Insurance from $12/mo',
+        titleKm: 'ធានារ៉ាប់រងអ្នកជួលចាប់ពី $12/ខែ',
+        titleZh: '租客保险每月仅$12起',
         description: 'Protect your belongings. Claims in 24h. Cambodia\'s #1 rated.',
+        descriptionKm: 'ការពារទ្រព្យសម្បត្តិរបស់អ្នក។ ទាមទារក្នុង 24ម៉ោង។',
+        descriptionZh: '保护您的财物。24小时内理赔。柬埔寨排名第一。',
         imageUrl: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=300&h=250&fit=crop',
         linkUrl: 'https://example.com/insurance',
         cta: 'Get Quote',

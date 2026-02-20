@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Save, Globe, Bell, Shield, Palette, Database, Mail as MailIcon } from 'lucide-react';
+import { Save, Globe, Bell, Shield, Palette, Database, Mail as MailIcon, Link as LinkIcon, Cpu, Zap } from 'lucide-react';
 import { useState } from 'react';
 
 export default function AdminSettings() {
@@ -50,6 +50,58 @@ export default function AdminSettings() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div><label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>SMTP Host</label><input defaultValue="smtp.resend.com" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} /></div>
                         <div><label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>From Email</label><input defaultValue="noreply@nestkhmer.com" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} /></div>
+                    </div>
+                </div>
+
+                {/* Social Links */}
+                <div className="glass-card p-6" style={{ borderRadius: 'var(--radius-xl)' }}>
+                    <div className="flex items-center gap-2 mb-4"><LinkIcon className="w-5 h-5" style={{ color: '#0088cc' }} /><h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Social Links</h2></div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[
+                            { label: 'Telegram', placeholder: 'https://t.me/nestkhmer', defaultValue: 'https://t.me/nestkhmer' },
+                            { label: 'Facebook', placeholder: 'https://facebook.com/nestkhmer', defaultValue: 'https://facebook.com/nestkhmer' },
+                            { label: 'Instagram', placeholder: 'https://instagram.com/nestkhmer', defaultValue: 'https://instagram.com/nestkhmer' },
+                            { label: 'TikTok', placeholder: 'https://tiktok.com/@nestkhmer', defaultValue: '' },
+                            { label: 'YouTube', placeholder: 'https://youtube.com/@nestkhmer', defaultValue: '' },
+                            { label: 'Twitter / X', placeholder: 'https://x.com/nestkhmer', defaultValue: '' },
+                            { label: 'LinkedIn', placeholder: 'https://linkedin.com/company/nestkhmer', defaultValue: '' },
+                        ].map(s => (
+                            <div key={s.label}><label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>{s.label}</label><input defaultValue={s.defaultValue} placeholder={s.placeholder} className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} /></div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* AI / LLM Configuration */}
+                <div className="glass-card p-6" style={{ borderRadius: 'var(--radius-xl)' }}>
+                    <div className="flex items-center gap-2 mb-2"><Cpu className="w-5 h-5" style={{ color: 'var(--color-brand-500)' }} /><h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>AI / LLM Configuration</h2></div>
+                    <p className="text-xs mb-4" style={{ color: 'var(--color-surface-400)' }}>Connect an AI model for automated market summaries, listing SEO, and smart matching.</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>Provider</label>
+                            <select defaultValue="openrouter" className="w-full px-4 py-2.5 rounded-xl text-sm" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }}>
+                                <option value="openrouter">OpenRouter</option>
+                                <option value="ollama">Ollama (Local)</option>
+                                <option value="openai">OpenAI</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>Model</label>
+                            <input defaultValue="meta-llama/llama-3.1-8b-instruct" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>API Key</label>
+                            <input type="password" defaultValue="" placeholder="sk-or-..." className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>Base URL</label>
+                            <input defaultValue="https://openrouter.ai/api/v1" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                        </div>
+                    </div>
+                    <div className="mt-4 flex items-center gap-3">
+                        <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: 'var(--color-surface-100)', color: 'var(--color-surface-700)' }}>
+                            <Zap className="w-3.5 h-3.5" />Test Connection
+                        </button>
+                        <span className="text-xs" style={{ color: 'var(--color-surface-400)' }}>Estimated cost: ~$2–5/month for daily AI tasks</span>
                     </div>
                 </div>
             </div>

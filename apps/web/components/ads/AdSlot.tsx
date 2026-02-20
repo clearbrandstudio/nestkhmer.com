@@ -30,6 +30,10 @@ export function AdSlot({ zone, className = '' }: AdSlotProps) {
         if (ad) trackAdClick(ad.id, zone);
     };
 
+    // Resolve locale-aware ad text
+    const adTitle = ad ? (locale === 'km' && ad.titleKm ? ad.titleKm : locale === 'zh' && ad.titleZh ? ad.titleZh : ad.title) : '';
+    const adDesc = ad ? (locale === 'km' && ad.descriptionKm ? ad.descriptionKm : locale === 'zh' && ad.descriptionZh ? ad.descriptionZh : ad.description) : '';
+
     // Determine if leaderboard (horizontal) or rectangle/skyscraper
     const isLeaderboard = dim.width >= 728;
     const isSkyscraper = dim.height >= 600;
@@ -117,8 +121,8 @@ export function AdSlot({ zone, className = '' }: AdSlotProps) {
                                     {ad.advertiser[0]}
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-white leading-tight">{ad.title}</p>
-                                    <p className="text-xs text-white/60 leading-tight mt-0.5">{ad.description}</p>
+                                    <p className="text-sm font-bold text-white leading-tight">{adTitle}</p>
+                                    <p className="text-xs text-white/60 leading-tight mt-0.5">{adDesc}</p>
                                 </div>
                             </div>
                             <div
@@ -158,10 +162,10 @@ export function AdSlot({ zone, className = '' }: AdSlotProps) {
                             {/* Content bottom half */}
                             <div className="p-3" style={{ background: 'white' }}>
                                 <p className="text-sm font-bold leading-tight mb-1" style={{ color: 'var(--color-surface-900)' }}>
-                                    {ad.title}
+                                    {adTitle}
                                 </p>
                                 <p className="text-xs leading-tight mb-2" style={{ color: 'var(--color-surface-500)' }}>
-                                    {ad.description}
+                                    {adDesc}
                                 </p>
                                 <div
                                     className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold"
@@ -200,10 +204,10 @@ export function AdSlot({ zone, className = '' }: AdSlotProps) {
                                         {ad.advertiser}
                                     </div>
                                     <p className="text-sm font-bold leading-tight mb-2" style={{ color: 'var(--color-surface-900)' }}>
-                                        {ad.title}
+                                        {adTitle}
                                     </p>
                                     <p className="text-xs leading-relaxed" style={{ color: 'var(--color-surface-500)' }}>
-                                        {ad.description}
+                                        {adDesc}
                                     </p>
                                 </div>
                                 <div

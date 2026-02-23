@@ -1,6 +1,7 @@
 'use client';
-import { motion } from 'framer-motion';
-import { Edit2, TrendingUp, Home, Clock } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Edit2, TrendingUp, Home, Clock, X } from 'lucide-react';
+import { useState } from 'react';
 
 const districts = [
     { name: 'BKK1', medianRent: 850, listings: 324, avgDays: 6 },
@@ -18,6 +19,7 @@ const districts = [
 ];
 
 export default function AdminDistricts() {
+    const [editModal, setEditModal] = useState<any | null>(null);
     return (
         <div className="p-6 md:p-8">
             <h1 className="text-2xl font-bold mb-6" style={{ fontFamily: 'var(--font-heading)' }}>District Management</h1>
@@ -33,12 +35,46 @@ export default function AdminDistricts() {
                                 <td className="px-4 py-3 text-sm font-semibold" style={{ color: 'var(--color-brand-700)' }}>${d.medianRent}</td>
                                 <td className="px-4 py-3 text-sm">{d.listings}</td>
                                 <td className="px-4 py-3 text-sm">{d.avgDays} days</td>
-                                <td className="px-4 py-3"><button className="p-1.5 rounded" style={{ color: 'var(--color-surface-400)' }}><Edit2 className="w-3.5 h-3.5" /></button></td>
+                                <td className="px-4 py-3"><button onClick={() => setEditModal(d)} className="p-1.5 rounded hover:bg-gray-100" style={{ color: 'var(--color-surface-400)' }} title="Edit"><Edit2 className="w-3.5 h-3.5" /></button></td>
                             </motion.tr>
                         ))}
                     </tbody>
                 </table>
             </div>
+
+            {/* Edit Modal */}
+            <AnimatePresence>
+                {editModal && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="glass-card w-full max-w-md p-6" style={{ borderRadius: 'var(--radius-2xl)', background: 'white' }}>
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-xl font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Edit District: {editModal.name}</h2>
+                                <button onClick={() => setEditModal(null)} className="p-2 rounded-lg hover:bg-gray-100"><X className="w-5 h-5" style={{ color: 'var(--color-surface-500)' }} /></button>
+                            </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-surface-600)' }}>Median Rent (USD) / month</label>
+                                    <input type="number" defaultValue={editModal.medianRent} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-purple-200" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-surface-600)' }}>Active Listings</label>
+                                        <input type="number" defaultValue={editModal.listings} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-purple-200" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                                    </div>
+                                    <div>
+                                        <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-surface-600)' }}>Avg Days to Let</label>
+                                        <input type="number" defaultValue={editModal.avgDays} className="w-full px-3 py-2.5 rounded-xl text-sm outline-none focus:ring-2 focus:ring-purple-200" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                                    </div>
+                                </div>
+                                <div className="pt-4 flex items-center justify-end gap-3" style={{ borderTop: '1px solid var(--color-surface-100)' }}>
+                                    <button onClick={() => setEditModal(null)} className="px-4 py-2.5 rounded-xl text-sm font-medium" style={{ color: 'var(--color-surface-600)' }}>Cancel</button>
+                                    <button onClick={() => { alert('Saved! (Demo)'); setEditModal(null); }} className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all text-white" style={{ background: 'var(--color-brand-600)' }}>Save Changes</button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

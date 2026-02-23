@@ -1,7 +1,7 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Eye, Trash2, CheckCircle, XCircle, Plus, X, Upload, Building2 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 const listings = [
     { id: '1', propertyId: 'NK-BKK1-2026-0042', title: 'Modern Studio with Mekong View', agent: 'Sophea Chan', district: 'BKK1', price: 650, status: 'active', score: 92, daysOld: 1 },
@@ -18,6 +18,9 @@ const districts = ['BKK1', 'Toul Kork', 'Koh Pich', 'Toul Tom Poung', 'Sen Sok',
 export default function AdminListings() {
     const [filter, setFilter] = useState('All');
     const [showForm, setShowForm] = useState(false);
+    const [actionModal, setActionModal] = useState<{ type: 'approve' | 'reject' | 'delete', id: string } | null>(null);
+    const [photos, setPhotos] = useState<string[]>([]);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [formData, setFormData] = useState({
         title: '',
         district: 'BKK1',
@@ -84,8 +87,8 @@ export default function AdminListings() {
                                 <td className="px-4 py-3">
                                     <div className="flex items-center gap-1">
                                         <button className="p-1.5 rounded hover:bg-gray-100" title="View" style={{ color: 'var(--color-surface-400)' }}><Eye className="w-3.5 h-3.5" /></button>
-                                        {l.status === 'pending' && <><button className="p-1.5 rounded hover:bg-green-50" title="Approve" style={{ color: 'var(--color-fresh-500)' }}><CheckCircle className="w-3.5 h-3.5" /></button><button className="p-1.5 rounded hover:bg-red-50" title="Reject" style={{ color: 'var(--color-danger-500)' }}><XCircle className="w-3.5 h-3.5" /></button></>}
-                                        <button className="p-1.5 rounded hover:bg-red-50" title="Delete" style={{ color: 'var(--color-danger-400)' }}><Trash2 className="w-3.5 h-3.5" /></button>
+                                        {l.status === 'pending' && <><button onClick={() => setActionModal({ type: 'approve', id: l.id })} className="p-1.5 rounded hover:bg-green-50" title="Approve" style={{ color: 'var(--color-fresh-500)' }}><CheckCircle className="w-3.5 h-3.5" /></button><button onClick={() => setActionModal({ type: 'reject', id: l.id })} className="p-1.5 rounded hover:bg-red-50" title="Reject" style={{ color: 'var(--color-danger-500)' }}><XCircle className="w-3.5 h-3.5" /></button></>}
+                                        <button onClick={() => setActionModal({ type: 'delete', id: l.id })} className="p-1.5 rounded hover:bg-red-50" title="Delete" style={{ color: 'var(--color-danger-400)' }}><Trash2 className="w-3.5 h-3.5" /></button>
                                     </div>
                                 </td>
                             </motion.tr>
@@ -169,11 +172,37 @@ export default function AdminListings() {
                                 {/* Photos Upload */}
                                 <div>
                                     <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-surface-600)' }}>Property Photos</label>
-                                    <div className="border-2 border-dashed rounded-xl p-8 text-center" style={{ borderColor: 'var(--color-surface-200)' }}>
+                                    <div
+                                        onDragOver={(e) => e.preventDefault()}
+                                        onDrop={(e) => {
+                                            e.preventDefault();
+                                            if (e.dataTransfer.files?.length) {
+                                                const newPhotos = Array.from(e.dataTransfer.files).map(f => URL.createObjectURL(f));
+                                                setPhotos(p => [...p, ...newPhotos]);
+                                            }
+                                        }}
+                                        className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:bg-gray-50"
+                                        style={{ borderColor: 'var(--color-surface-200)' }}
+                                    >
                                         <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--color-surface-400)' }} />
-                                        <p className="text-sm" style={{ color: 'var(--color-surface-500)' }}>Drag & drop photos or <span style={{ color: 'var(--color-brand-600)' }} className="font-semibold cursor-pointer">browse</span></p>
+                                        <p className="text-sm" style={{ color: 'var(--color-surface-500)' }}>Drag & drop photos or <button type="button" onClick={() => fileInputRef.current?.click()} style={{ color: 'var(--color-brand-600)' }} className="font-semibold cursor-pointer">browse</button></p>
                                         <p className="text-xs mt-1" style={{ color: 'var(--color-surface-400)' }}>Minimum 5 photos required • JPG, PNG up to 5MB each</p>
+                                        <input type="file" multiple accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
+                                            if (e.target.files?.length) {
+                                                const newPhotos = Array.from(e.target.files).map(f => URL.createObjectURL(f));
+                                                setPhotos(p => [...p, ...newPhotos]);
+                                            }
+                                        }} />
                                     </div>
+                                    {photos.length > 0 && (
+                                        <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
+                                            {photos.map((p, i) => (
+                                                <div key={i} className="relative w-16 h-16 rounded-lg flex-shrink-0 border" style={{ borderColor: 'var(--color-surface-200)', backgroundImage: `url(${p})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                                                    <button type="button" onClick={() => setPhotos(prev => prev.filter((_, idx) => idx !== i))} className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-red-500 text-white flex items-center justify-center text-[10px]">✕</button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Description */}
@@ -187,6 +216,32 @@ export default function AdminListings() {
                                     <button onClick={() => setShowForm(false)} className="px-4 py-2.5 rounded-xl text-sm font-medium" style={{ color: 'var(--color-surface-600)' }}>Cancel</button>
                                     <button onClick={handleSubmit} disabled={!formData.title || !formData.price} className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all disabled:opacity-50" style={{ background: 'var(--color-brand-600)', color: 'white' }}>
                                         <Plus className="w-4 h-4" />Create Listing
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            {/* Action Modal */}
+            <AnimatePresence>
+                {actionModal && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="glass-card w-full max-w-sm p-6" style={{ borderRadius: 'var(--radius-2xl)', background: 'white' }}>
+                            <div className="flex flex-col items-center text-center">
+                                <div className="w-12 h-12 rounded-full flex items-center justify-center mb-4" style={{ background: actionModal.type === 'delete' || actionModal.type === 'reject' ? 'rgba(239,68,68,0.1)' : 'var(--color-fresh-50)' }}>
+                                    {actionModal.type === 'delete' ? <Trash2 className="w-6 h-6 text-red-500" /> : actionModal.type === 'reject' ? <XCircle className="w-6 h-6 text-red-500" /> : <CheckCircle className="w-6 h-6" style={{ color: 'var(--color-fresh-600)' }} />}
+                                </div>
+                                <h3 className="text-lg font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>
+                                    {actionModal.type === 'approve' ? 'Approve Listing' : actionModal.type === 'reject' ? 'Reject Listing' : 'Delete Listing'}
+                                </h3>
+                                <p className="text-sm mb-6" style={{ color: 'var(--color-surface-500)' }}>
+                                    {actionModal.type === 'approve' ? 'Are you sure you want to approve this listing? It will become active immediately.' : actionModal.type === 'reject' ? 'Are you sure you want to reject this listing? The agent will be notified.' : 'Are you sure you want to delete this listing? This action cannot be undone.'}
+                                </p>
+                                <div className="flex w-full gap-3">
+                                    <button onClick={() => setActionModal(null)} className="flex-1 py-2.5 rounded-xl text-sm font-semibold" style={{ background: 'var(--color-surface-100)', color: 'var(--color-surface-700)' }}>Cancel</button>
+                                    <button onClick={() => { alert(`${actionModal.type} executed! (Demo)`); setActionModal(null); }} className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ background: actionModal.type === 'delete' || actionModal.type === 'reject' ? 'var(--color-danger-600)' : 'var(--color-fresh-600)' }}>
+                                        Confirm
                                     </button>
                                 </div>
                             </div>

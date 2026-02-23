@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Save, Eye, ArrowLeft, Globe, Tag, Image, Type, LayoutGrid, Code, AlignLeft, FileText, Settings } from 'lucide-react';
-import { useState } from 'react';
+import { Save, Eye, ArrowLeft, Globe, Tag, Image, Type, LayoutGrid, Code, AlignLeft, FileText, Settings, X, Upload } from 'lucide-react';
+import { useState, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 
 type ContentBlock = { id: string; type: 'text' | 'heading' | 'image' | 'stats' | 'cta'; content: string };
@@ -18,7 +18,7 @@ export default function PageEditor() {
         type: 'page' as 'page' | 'post',
         status: 'draft' as 'draft' | 'published',
         category: '',
-        tags: '',
+        tags: [] as string[],
         metaTitle: '',
         metaDescription: '',
         featuredImage: '',
@@ -30,6 +30,23 @@ export default function PageEditor() {
         { id: '1', type: 'heading', content: '' },
         { id: '2', type: 'text', content: '' },
     ]);
+    const [tagInput, setTagInput] = useState('');
+    const featuredInputRef = useRef<HTMLInputElement>(null);
+    const blockInputRef = useRef<HTMLInputElement>(null);
+    const [activeImageBlock, setActiveImageBlock] = useState<string | null>(null);
+
+    const handleAddTag = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && tagInput.trim()) {
+            e.preventDefault();
+            if (!pageData.tags.includes(tagInput.trim())) {
+                setPageData(p => ({ ...p, tags: [...p.tags, tagInput.trim()] }));
+            }
+            setTagInput('');
+        }
+    };
+    const removeTag = (tagToRemove: string) => {
+        setPageData(p => ({ ...p, tags: p.tags.filter(t => t !== tagToRemove) }));
+    };
 
     const addBlock = (type: ContentBlock['type']) => {
         setBlocks(prev => [...prev, { id: Date.now().toString(), type, content: '' }]);
@@ -146,8 +163,26 @@ export default function PageEditor() {
                                                     placeholder="Section heading..."
                                                 />
                                             ) : block.type === 'image' ? (
-                                                <div className="flex-1 flex items-center justify-center p-6 rounded-xl cursor-pointer" style={{ border: '2px dashed var(--color-surface-200)', background: 'var(--color-surface-50)' }}>
-                                                    <div className="text-center"><Image className="w-5 h-5 mx-auto mb-1" style={{ color: 'var(--color-surface-400)' }} /><span className="text-xs" style={{ color: 'var(--color-surface-400)' }}>Click to add image</span></div>
+                                                <div
+                                                    className="flex-1 flex flex-col items-center justify-center p-6 rounded-xl relative overflow-hidden transition-colors hover:bg-white"
+                                                    style={{ border: block.content ? '1px solid var(--color-surface-200)' : '2px dashed var(--color-surface-200)', background: 'var(--color-surface-50)', minHeight: 120 }}
+                                                    onDragOver={(e) => e.preventDefault()}
+                                                    onDrop={(e) => {
+                                                        e.preventDefault();
+                                                        if (e.dataTransfer.files?.[0]) updateBlock(block.id, URL.createObjectURL(e.dataTransfer.files[0]));
+                                                    }}
+                                                >
+                                                    {block.content ? (
+                                                        <>
+                                                            <img src={block.content} alt="Block image" className="w-full h-auto max-h-64 object-contain rounded-lg" />
+                                                            <button onClick={() => updateBlock(block.id, '')} className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-sm text-red-500 hover:bg-red-50 transition-colors"><X className="w-4 h-4" /></button>
+                                                        </>
+                                                    ) : (
+                                                        <div className="text-center cursor-pointer" onClick={() => { setActiveImageBlock(block.id); blockInputRef.current?.click(); }}>
+                                                            <Image className="w-6 h-6 mx-auto mb-2 text-gray-400" />
+                                                            <span className="text-sm font-medium text-gray-600">Drag & drop image or <span className="text-purple-600">browse</span></span>
+                                                        </div>
+                                                    )}
                                                 </div>
                                             ) : (
                                                 <input
@@ -192,8 +227,22 @@ export default function PageEditor() {
                                 </select>
                             </div>
                             <div>
-                                <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-surface-500)' }}>Tags</label>
-                                <input value={pageData.tags} onChange={(e) => setPageData(p => ({ ...p, tags: e.target.value }))} className="w-full px-3 py-2 rounded-lg text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} placeholder="BKK1, rental, market" />
+                                <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--color-surface-500)' }}>Tags <span className="text-[10px] text-gray-400 font-normal">(Press Enter to add)</span></label>
+                                <div className="w-full p-1.5 rounded-lg flex flex-wrap gap-1 items-center" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)', minHeight: 40 }}>
+                                    {pageData.tags.map(tag => (
+                                        <span key={tag} className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded bg-white border shadow-sm" style={{ color: 'var(--color-brand-700)', borderColor: 'var(--color-surface-200)' }}>
+                                            {tag}
+                                            <button type="button" onClick={() => removeTag(tag)} className="opacity-60 hover:opacity-100 text-red-500"><X className="w-3 h-3" /></button>
+                                        </span>
+                                    ))}
+                                    <input
+                                        value={tagInput}
+                                        onChange={e => setTagInput(e.target.value)}
+                                        onKeyDown={handleAddTag}
+                                        className="flex-1 min-w-[80px] px-1.5 py-1 text-sm outline-none bg-transparent"
+                                        placeholder={pageData.tags.length === 0 ? "e.g. BKK1, rental" : ""}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -218,15 +267,45 @@ export default function PageEditor() {
                     {/* Featured Image */}
                     <div className="glass-card p-5" style={{ borderRadius: 'var(--radius-xl)' }}>
                         <h3 className="text-sm font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>Featured Image</h3>
-                        <div className="flex items-center justify-center p-8 rounded-xl cursor-pointer" style={{ border: '2px dashed var(--color-surface-200)', background: 'var(--color-surface-50)' }}>
-                            <div className="text-center">
-                                <Image className="w-6 h-6 mx-auto mb-2" style={{ color: 'var(--color-surface-400)' }} />
-                                <span className="text-xs" style={{ color: 'var(--color-surface-400)' }}>Upload featured image</span>
-                            </div>
+                        <div
+                            className="flex flex-col items-center justify-center p-8 rounded-xl relative overflow-hidden transition-colors hover:bg-white"
+                            style={{ border: pageData.featuredImage ? '1px solid var(--color-surface-200)' : '2px dashed var(--color-surface-200)', background: 'var(--color-surface-50)', minHeight: 160 }}
+                            onDragOver={(e) => e.preventDefault()}
+                            onDrop={(e) => {
+                                e.preventDefault();
+                                if (e.dataTransfer.files?.[0]) setPageData(p => ({ ...p, featuredImage: URL.createObjectURL(e.dataTransfer.files[0]) }));
+                            }}
+                        >
+                            {pageData.featuredImage ? (
+                                <>
+                                    <img src={pageData.featuredImage} alt="Featured" className="w-full h-auto max-h-48 object-cover rounded-lg" />
+                                    <button onClick={() => setPageData(p => ({ ...p, featuredImage: '' }))} className="absolute top-3 right-3 p-1.5 bg-white/90 rounded-full shadow-sm text-red-500 hover:bg-white transition-colors"><X className="w-4 h-4" /></button>
+                                </>
+                            ) : (
+                                <div className="text-center cursor-pointer" onClick={() => featuredInputRef.current?.click()}>
+                                    <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--color-surface-400)' }} />
+                                    <p className="text-sm font-medium" style={{ color: 'var(--color-surface-600)' }}>Drag & drop image or <span className="text-purple-600">browse</span></p>
+                                    <p className="text-xs mt-1" style={{ color: 'var(--color-surface-400)' }}>1200x630px recommended</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Hidden File Inputs */}
+            <input type="file" accept="image/*" className="hidden" ref={featuredInputRef} onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) setPageData(p => ({ ...p, featuredImage: URL.createObjectURL(file) }));
+            }} />
+            <input type="file" accept="image/*" className="hidden" ref={blockInputRef} onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file && activeImageBlock) {
+                    updateBlock(activeImageBlock, URL.createObjectURL(file));
+                    setActiveImageBlock(null);
+                    if (blockInputRef.current) blockInputRef.current.value = '';
+                }
+            }} />
         </div>
     );
 }

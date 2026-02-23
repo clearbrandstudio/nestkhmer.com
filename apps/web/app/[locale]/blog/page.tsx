@@ -19,7 +19,7 @@ export default function BlogPage() {
     const pathname = usePathname();
     const locale = pathname.split('/')[1] || 'en';
     return (
-        <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
+        <div className="min-h-screen pb-32" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
             <div className="section-container pt-8 pb-32">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
                     <h1 className="text-4xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>NestKhmer Blog</h1>

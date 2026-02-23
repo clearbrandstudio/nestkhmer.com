@@ -21,7 +21,6 @@ export default function HomePage() {
             <TopDeals />
             <WhyNestKhmer />
             <TopAgents />
-            <StatsBanner />
         </>
     );
 }

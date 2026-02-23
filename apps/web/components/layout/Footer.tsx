@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { Home, Mail, MapPin, Phone, Send } from 'lucide-react';
+import { StatsBanner } from '../home/StatsBanner';
 
 /* ─── Social Icon SVGs ─── */
 function FacebookIcon({ className }: { className?: string }) {
@@ -48,230 +49,232 @@ export function Footer() {
     ];
 
     return (
-        <footer
-            className="relative overflow-hidden"
-            style={{
-                background: 'var(--color-surface-950)',
-                color: 'var(--color-surface-300)',
-            }}
-        >
-            {/* Top edge gradient */}
-            <div
-                className="absolute top-0 left-0 right-0 h-px"
+        <>
+            <StatsBanner />
+            <footer
+                className="relative overflow-hidden"
                 style={{
-                    background: 'linear-gradient(90deg, transparent, var(--color-brand-500)/30, var(--color-fresh-500)/20, transparent)',
+                    background: 'var(--color-surface-950)',
+                    color: 'var(--color-surface-300)',
                 }}
-            />
-
-            {/* Ambient glow */}
-            <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
-                style={{
-                    background: 'radial-gradient(ellipse, rgba(139,79,255,0.06) 0%, transparent 70%)',
-                }}
-            />
-
-            <div className="section-container relative z-10 pt-20 pb-12">
-                {/* Main Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
-                    {/* Brand Column */}
-                    <div className="lg:col-span-1">
-                        <a
-                            href={`/${currentLocale}`}
-                            className="flex items-center gap-2.5 text-xl font-bold no-underline mb-5"
-                            style={{ fontFamily: 'var(--font-heading)', color: 'white' }}
-                        >
-                            <div
-                                className="w-9 h-9 rounded-lg flex items-center justify-center"
-                                style={{ background: 'var(--color-brand-600)' }}
-                            >
-                                <Home className="w-4.5 h-4.5 text-white" />
-                            </div>
-                            Nest<span style={{ color: 'var(--color-fresh-400)' }}>Khmer</span>
-                        </a>
-                        <p
-                            className="text-sm leading-relaxed mb-5"
-                            style={{ color: 'var(--color-surface-400)', maxWidth: '280px' }}
-                        >
-                            {t('tagline')}
-                        </p>
-                        <div
-                            className="flex items-center gap-2 text-sm mb-6"
-                            style={{ color: 'var(--color-surface-500)' }}
-                        >
-                            <MapPin className="w-4 h-4 flex-shrink-0" />
-                            Phnom Penh, Cambodia
-                        </div>
-
-                        {/* Social Links */}
-                        <div className="flex items-center gap-3">
-                            {socialLinks.map((social) => {
-                                const IconComp = 'icon' in social ? social.icon : social.Icon;
-                                return (
-                                    <a
-                                        key={social.label}
-                                        href={social.href}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        aria-label={social.label}
-                                        className="w-9 h-9 rounded-lg flex items-center justify-center transition-all no-underline"
-                                        style={{
-                                            background: 'var(--color-surface-800)',
-                                            color: 'var(--color-surface-400)',
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            (e.currentTarget as HTMLElement).style.background = social.color;
-                                            (e.currentTarget as HTMLElement).style.color = 'white';
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            (e.currentTarget as HTMLElement).style.background = 'var(--color-surface-800)';
-                                            (e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)';
-                                        }}
-                                    >
-                                        <IconComp className="w-4 h-4" />
-                                    </a>
-                                );
-                            })}
-                        </div>
-                    </div>
-
-                    {/* Company Links */}
-                    <div>
-                        <h4
-                            className="text-sm font-semibold mb-5 uppercase tracking-wider"
-                            style={{ color: 'white', fontFamily: 'var(--font-heading)', fontSize: '0.75rem' }}
-                        >
-                            {t('company')}
-                        </h4>
-                        <ul className="space-y-3.5 list-none p-0 m-0">
-                            {companyLinks.map((link) => (
-                                <li key={link.href}>
-                                    <a
-                                        href={link.href}
-                                        className="text-sm no-underline transition-colors"
-                                        style={{ color: 'var(--color-surface-400)' }}
-                                        onMouseEnter={(e) =>
-                                            ((e.target as HTMLElement).style.color = 'var(--color-brand-400)')
-                                        }
-                                        onMouseLeave={(e) =>
-                                            ((e.target as HTMLElement).style.color = 'var(--color-surface-400)')
-                                        }
-                                    >
-                                        {link.label}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Resources Links */}
-                    <div>
-                        <h4
-                            className="text-sm font-semibold mb-5 uppercase tracking-wider"
-                            style={{ color: 'white', fontFamily: 'var(--font-heading)', fontSize: '0.75rem' }}
-                        >
-                            {t('resources')}
-                        </h4>
-                        <ul className="space-y-3.5 list-none p-0 m-0">
-                            {resourceLinks.map((link) => (
-                                <li key={link.label}>
-                                    <a
-                                        href={link.href}
-                                        className="text-sm no-underline transition-colors"
-                                        style={{ color: 'var(--color-surface-400)' }}
-                                        onMouseEnter={(e) =>
-                                            ((e.target as HTMLElement).style.color = 'var(--color-brand-400)')
-                                        }
-                                        onMouseLeave={(e) =>
-                                            ((e.target as HTMLElement).style.color = 'var(--color-surface-400)')
-                                        }
-                                    >
-                                        {link.label}
-                                    </a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Contact */}
-                    <div>
-                        <h4
-                            className="text-sm font-semibold mb-5 uppercase tracking-wider"
-                            style={{ color: 'white', fontFamily: 'var(--font-heading)', fontSize: '0.75rem' }}
-                        >
-                            {t('contact')}
-                        </h4>
-                        <div className="space-y-4">
-                            <a
-                                href="mailto:hello@nestkhmer.com"
-                                className="flex items-center gap-3 text-sm no-underline transition-colors"
-                                style={{ color: 'var(--color-surface-400)' }}
-                                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = 'white')}
-                                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)')}
-                            >
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                                    style={{ background: 'var(--color-surface-800)' }}>
-                                    <Mail className="w-3.5 h-3.5" />
-                                </div>
-                                hello@nestkhmer.com
-                            </a>
-                            <a
-                                href="tel:+85512345678"
-                                className="flex items-center gap-3 text-sm no-underline transition-colors"
-                                style={{ color: 'var(--color-surface-400)' }}
-                                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = 'white')}
-                                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)')}
-                            >
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                                    style={{ background: 'var(--color-surface-800)' }}>
-                                    <Phone className="w-3.5 h-3.5" />
-                                </div>
-                                +855 12 345 678
-                            </a>
-                            <a
-                                href="https://t.me/nestkhmer"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center gap-3 text-sm no-underline transition-colors"
-                                style={{ color: 'var(--color-surface-400)' }}
-                                onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#0088cc')}
-                                onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)')}
-                            >
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                                    style={{ background: 'var(--color-surface-800)' }}>
-                                    <Send className="w-3.5 h-3.5" />
-                                </div>
-                                @nestkhmer
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Bottom Bar */}
+            >
+                {/* Top edge gradient */}
                 <div
-                    className="mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
-                    style={{ borderTop: '1px solid var(--color-surface-800)' }}
-                >
-                    <p className="text-xs" style={{ color: 'var(--color-surface-500)' }}>
-                        {t('copyright')}
-                    </p>
-                    <div className="flex items-center gap-6">
-                        <a href="#" className="text-xs no-underline transition-colors" style={{ color: 'var(--color-surface-600)' }}
-                            onMouseEnter={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-300)')}
-                            onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-600)')}>
-                            {t('privacy')}
-                        </a>
-                        <a href="#" className="text-xs no-underline transition-colors" style={{ color: 'var(--color-surface-600)' }}
-                            onMouseEnter={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-300)')}
-                            onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-600)')}>
-                            {t('terms')}
-                        </a>
-                        <span className="text-xs" style={{ color: 'var(--color-surface-600)' }}>
-                            Built for Cambodia 🇰🇭
-                        </span>
+                    className="absolute top-0 left-0 right-0 h-px"
+                    style={{
+                        background: 'linear-gradient(90deg, transparent, var(--color-brand-500)/30, var(--color-fresh-500)/20, transparent)',
+                    }}
+                />
+
+                {/* Ambient glow */}
+                <div
+                    className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] pointer-events-none"
+                    style={{
+                        background: 'radial-gradient(ellipse, rgba(139,79,255,0.06) 0%, transparent 70%)',
+                    }}
+                />
+
+                <div className="section-container relative z-10 pt-20 pb-12">
+                    {/* Main Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+                        {/* Brand Column */}
+                        <div className="lg:col-span-1">
+                            <a
+                                href={`/${currentLocale}`}
+                                className="flex items-center gap-2.5 text-xl font-bold no-underline mb-5"
+                                style={{ fontFamily: 'var(--font-heading)', color: 'white' }}
+                            >
+                                <div
+                                    className="w-9 h-9 rounded-lg flex items-center justify-center"
+                                    style={{ background: 'var(--color-brand-600)' }}
+                                >
+                                    <Home className="w-4.5 h-4.5 text-white" />
+                                </div>
+                                Nest<span style={{ color: 'var(--color-fresh-400)' }}>Khmer</span>
+                            </a>
+                            <p
+                                className="text-sm leading-relaxed mb-5"
+                                style={{ color: 'var(--color-surface-400)', maxWidth: '280px' }}
+                            >
+                                {t('tagline')}
+                            </p>
+                            <div
+                                className="flex items-center gap-2 text-sm mb-6"
+                                style={{ color: 'var(--color-surface-500)' }}
+                            >
+                                <MapPin className="w-4 h-4 flex-shrink-0" />
+                                Phnom Penh, Cambodia
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                {socialLinks.map((social) => {
+                                    const IconComp = ('icon' in social ? social.icon : social.Icon) as React.ElementType;
+                                    return (
+                                        <a
+                                            key={social.label}
+                                            href={social.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            aria-label={social.label}
+                                            className="w-9 h-9 rounded-lg flex items-center justify-center transition-all no-underline"
+                                            style={{
+                                                background: 'var(--color-surface-800)',
+                                                color: 'var(--color-surface-400)',
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                (e.currentTarget as HTMLElement).style.background = social.color;
+                                                (e.currentTarget as HTMLElement).style.color = 'white';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                (e.currentTarget as HTMLElement).style.background = 'var(--color-surface-800)';
+                                                (e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)';
+                                            }}
+                                        >
+                                            <IconComp className="w-4 h-4" />
+                                        </a>
+                                    );
+                                })}
+                            </div>
+                        </div>
+
+                        {/* Company Links */}
+                        <div>
+                            <h4
+                                className="text-sm font-semibold mb-5 uppercase tracking-wider"
+                                style={{ color: 'white', fontFamily: 'var(--font-heading)', fontSize: '0.75rem' }}
+                            >
+                                {t('company')}
+                            </h4>
+                            <ul className="space-y-3.5 list-none p-0 m-0">
+                                {companyLinks.map((link) => (
+                                    <li key={link.href}>
+                                        <a
+                                            href={link.href}
+                                            className="text-sm no-underline transition-colors"
+                                            style={{ color: 'var(--color-surface-400)' }}
+                                            onMouseEnter={(e) =>
+                                                ((e.target as HTMLElement).style.color = 'var(--color-brand-400)')
+                                            }
+                                            onMouseLeave={(e) =>
+                                                ((e.target as HTMLElement).style.color = 'var(--color-surface-400)')
+                                            }
+                                        >
+                                            {link.label}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Resources Links */}
+                        <div>
+                            <h4
+                                className="text-sm font-semibold mb-5 uppercase tracking-wider"
+                                style={{ color: 'white', fontFamily: 'var(--font-heading)', fontSize: '0.75rem' }}
+                            >
+                                {t('resources')}
+                            </h4>
+                            <ul className="space-y-3.5 list-none p-0 m-0">
+                                {resourceLinks.map((link) => (
+                                    <li key={link.label}>
+                                        <a
+                                            href={link.href}
+                                            className="text-sm no-underline transition-colors"
+                                            style={{ color: 'var(--color-surface-400)' }}
+                                            onMouseEnter={(e) =>
+                                                ((e.target as HTMLElement).style.color = 'var(--color-brand-400)')
+                                            }
+                                            onMouseLeave={(e) =>
+                                                ((e.target as HTMLElement).style.color = 'var(--color-surface-400)')
+                                            }
+                                        >
+                                            {link.label}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Contact */}
+                        <div>
+                            <h4
+                                className="text-sm font-semibold mb-5 uppercase tracking-wider"
+                                style={{ color: 'white', fontFamily: 'var(--font-heading)', fontSize: '0.75rem' }}
+                            >
+                                {t('contact')}
+                            </h4>
+                            <div className="space-y-4">
+                                <a
+                                    href="mailto:hello@nestkhmer.com"
+                                    className="flex items-center gap-3 text-sm no-underline transition-colors"
+                                    style={{ color: 'var(--color-surface-400)' }}
+                                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = 'white')}
+                                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)')}
+                                >
+                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{ background: 'var(--color-surface-800)' }}>
+                                        <Mail className="w-3.5 h-3.5" />
+                                    </div>
+                                    hello@nestkhmer.com
+                                </a>
+                                <a
+                                    href="tel:+85512345678"
+                                    className="flex items-center gap-3 text-sm no-underline transition-colors"
+                                    style={{ color: 'var(--color-surface-400)' }}
+                                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = 'white')}
+                                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)')}
+                                >
+                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{ background: 'var(--color-surface-800)' }}>
+                                        <Phone className="w-3.5 h-3.5" />
+                                    </div>
+                                    +855 12 345 678
+                                </a>
+                                <a
+                                    href="https://t.me/nestkhmer"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 text-sm no-underline transition-colors"
+                                    style={{ color: 'var(--color-surface-400)' }}
+                                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.color = '#0088cc')}
+                                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.color = 'var(--color-surface-400)')}
+                                >
+                                    <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                        style={{ background: 'var(--color-surface-800)' }}>
+                                        <Send className="w-3.5 h-3.5" />
+                                    </div>
+                                    @nestkhmer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Bottom Bar */}
+                    <div
+                        className="mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+                        style={{ borderTop: '1px solid var(--color-surface-800)' }}
+                    >
+                        <p className="text-xs" style={{ color: 'var(--color-surface-500)' }}>
+                            {t('copyright')}
+                        </p>
+                        <div className="flex items-center gap-6">
+                            <a href="#" className="text-xs no-underline transition-colors" style={{ color: 'var(--color-surface-600)' }}
+                                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-300)')}
+                                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-600)')}>
+                                {t('privacy')}
+                            </a>
+                            <a href="#" className="text-xs no-underline transition-colors" style={{ color: 'var(--color-surface-600)' }}
+                                onMouseEnter={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-300)')}
+                                onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'var(--color-surface-600)')}>
+                                {t('terms')}
+                            </a>
+                            <span className="text-xs" style={{ color: 'var(--color-surface-600)' }}>
+                                Built for Cambodia 🇰🇭
+                            </span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </footer>
+            </footer>
+        </>
     );
 }

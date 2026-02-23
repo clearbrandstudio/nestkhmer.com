@@ -1,7 +1,7 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Eye, BarChart3, Pause, Play, X, Upload, Calendar, DollarSign, MapPin, Image, FileText, Target } from 'lucide-react';
-import { useState } from 'react';
+import { Plus, Eye, BarChart3, Pause, Play, X, Upload, Calendar, DollarSign, MapPin, Image as ImageIcon, FileText, Target } from 'lucide-react';
+import { useState, useRef } from 'react';
 
 const campaigns = [
     { name: 'Koh Pich Premium Living', zone: 'Homepage Hero', status: 'active', impressions: 12450, clicks: 398, ctr: '3.2%', spend: '$499', start: 'Feb 1', end: 'Feb 28' },
@@ -22,6 +22,9 @@ const adZones = [
 
 export default function AdminAds() {
     const [showForm, setShowForm] = useState(false);
+    const [campaignsState, setCampaignsState] = useState(campaigns);
+    const [creative, setCreative] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [formData, setFormData] = useState({
         name: '',
         zone: 'homepage-hero',
@@ -43,6 +46,16 @@ export default function AdminAds() {
         alert(`Campaign "${formData.name}" created for zone "${formData.zone}" with budget ${formData.budget}`);
         setShowForm(false);
         setFormData({ name: '', zone: 'homepage-hero', budget: '', startDate: '', endDate: '', targetUrl: '', headlineEn: '', headlineKm: '', headlineZh: '', descriptionEn: '', descriptionKm: '', descriptionZh: '' });
+        setCreative(null);
+    };
+
+    const toggleCampaignStatus = (name: string) => {
+        setCampaignsState(prev => prev.map(c => {
+            if (c.name === name && c.status !== 'ended') {
+                return { ...c, status: c.status === 'active' ? 'paused' : 'active' }
+            }
+            return c;
+        }));
     };
 
     const inputStyle: React.CSSProperties = { background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)', color: 'var(--color-surface-800)' };
@@ -80,7 +93,7 @@ export default function AdminAds() {
                         {['Campaign', 'Zone', 'Status', 'Impressions', 'Clicks', 'CTR', 'Spend', 'Period', ''].map(h => <th key={h} className="text-left text-xs font-medium px-4 py-3" style={{ color: 'var(--color-surface-500)' }}>{h}</th>)}
                     </tr></thead>
                     <tbody>
-                        {campaigns.map((c, i) => (
+                        {campaignsState.map((c, i) => (
                             <motion.tr key={c.name} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }} style={{ borderBottom: '1px solid var(--color-surface-50)' }}>
                                 <td className="px-4 py-3 text-sm font-medium" style={{ color: 'var(--color-surface-800)' }}>{c.name}</td>
                                 <td className="px-4 py-3 text-xs" style={{ color: 'var(--color-surface-500)' }}>{c.zone}</td>
@@ -90,7 +103,7 @@ export default function AdminAds() {
                                 <td className="px-4 py-3 text-sm font-semibold" style={{ color: 'var(--color-fresh-600)' }}>{c.ctr}</td>
                                 <td className="px-4 py-3 text-sm font-semibold">{c.spend}</td>
                                 <td className="px-4 py-3 text-xs" style={{ color: 'var(--color-surface-400)' }}>{c.start} – {c.end}</td>
-                                <td className="px-4 py-3"><div className="flex gap-1"><button className="p-1.5 rounded hover:bg-gray-100" style={{ color: 'var(--color-surface-400)' }}><BarChart3 className="w-3.5 h-3.5" /></button>{c.status !== 'ended' && <button className="p-1.5 rounded hover:bg-gray-100" style={{ color: 'var(--color-surface-400)' }}>{c.status === 'paused' ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}</button>}</div></td>
+                                <td className="px-4 py-3"><div className="flex gap-1"><button className="p-1.5 rounded hover:bg-gray-100" style={{ color: 'var(--color-surface-400)' }}><BarChart3 className="w-3.5 h-3.5" /></button>{c.status !== 'ended' && <button onClick={() => toggleCampaignStatus(c.name)} className="p-1.5 rounded hover:bg-gray-100" style={{ color: 'var(--color-surface-400)' }}>{c.status === 'paused' ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}</button>}</div></td>
                             </motion.tr>
                         ))}
                     </tbody>
@@ -169,11 +182,36 @@ export default function AdminAds() {
                                 {/* Creative Upload */}
                                 <div>
                                     <label className="text-xs font-medium mb-1.5 block" style={{ color: 'var(--color-surface-600)' }}>Ad Creative</label>
-                                    <div className="border-2 border-dashed rounded-xl p-8 text-center" style={{ borderColor: 'var(--color-surface-200)' }}>
-                                        <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--color-surface-400)' }} />
-                                        <p className="text-sm" style={{ color: 'var(--color-surface-500)' }}>Drag & drop your ad image or <span style={{ color: 'var(--color-brand-600)' }} className="font-semibold cursor-pointer">browse</span></p>
-                                        <p className="text-xs mt-1" style={{ color: 'var(--color-surface-400)' }}>PNG, JPG up to 2MB • {adZones.find(z => z.id === formData.zone)?.size || '1200×400'}</p>
-                                    </div>
+                                    {!creative ? (
+                                        <div
+                                            onDragOver={(e) => e.preventDefault()}
+                                            onDrop={(e) => {
+                                                e.preventDefault();
+                                                if (e.dataTransfer.files?.[0]) {
+                                                    setCreative(URL.createObjectURL(e.dataTransfer.files[0]));
+                                                }
+                                            }}
+                                            className="border-2 border-dashed rounded-xl p-8 text-center transition-colors hover:bg-gray-50 cursor-pointer"
+                                            style={{ borderColor: 'var(--color-surface-200)' }}
+                                            onClick={() => fileInputRef.current?.click()}
+                                        >
+                                            <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--color-surface-400)' }} />
+                                            <p className="text-sm" style={{ color: 'var(--color-surface-500)' }}>Drag & drop your ad image or <span style={{ color: 'var(--color-brand-600)' }} className="font-semibold">browse</span></p>
+                                            <p className="text-xs mt-1" style={{ color: 'var(--color-surface-400)' }}>PNG, JPG up to 2MB • {adZones.find(z => z.id === formData.zone)?.size || '1200×400'}</p>
+                                            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={(e) => {
+                                                if (e.target.files?.[0]) {
+                                                    setCreative(URL.createObjectURL(e.target.files[0]));
+                                                }
+                                            }} />
+                                        </div>
+                                    ) : (
+                                        <div className="relative rounded-xl overflow-hidden border" style={{ borderColor: 'var(--color-surface-200)' }}>
+                                            <img src={creative} alt="Ad Creative Preview" className="w-full h-auto max-h-48 object-contain bg-gray-50" />
+                                            <button type="button" onClick={() => setCreative(null)} className="absolute top-2 right-2 w-7 h-7 bg-white/90 rounded-full flex items-center justify-center shadow-sm text-gray-700 hover:bg-white hover:text-red-500 transition-colors">
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Multi-language Headlines */}

@@ -5,6 +5,25 @@ import { useState } from 'react';
 
 export default function AdminSettings() {
     const [saved, setSaved] = useState(false);
+    const [testing, setTesting] = useState(false);
+    const [testResult, setTestResult] = useState<'idle' | 'success' | 'error'>('idle');
+    const [toggles, setToggles] = useState<Record<string, boolean>>({
+        'New agent registration': true,
+        'KYC submission': true,
+        'Listing pending review': true,
+        'Listing expiring soon': false,
+        'New ad campaign': true
+    });
+
+    const handleTestConnection = () => {
+        setTesting(true);
+        setTestResult('idle');
+        setTimeout(() => {
+            setTesting(false);
+            setTestResult('success');
+            setTimeout(() => setTestResult('idle'), 3000);
+        }, 1500);
+    };
     return (
         <div className="p-6 md:p-8 max-w-3xl">
             <div className="flex items-center justify-between mb-6">
@@ -37,10 +56,22 @@ export default function AdminSettings() {
                     <div className="flex items-center gap-2 mb-4"><Bell className="w-5 h-5" style={{ color: 'var(--color-warn-500)' }} /><h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Notifications</h2></div>
                     <div className="space-y-3">
                         {['New agent registration', 'KYC submission', 'Listing pending review', 'Listing expiring soon', 'New ad campaign'].map(n => (
-                            <label key={n} className="flex items-center justify-between p-3 rounded-lg cursor-pointer" style={{ background: 'var(--color-surface-50)' }}>
-                                <span className="text-sm" style={{ color: 'var(--color-surface-700)' }}>{n}</span>
-                                <input type="checkbox" defaultChecked className="w-4 h-4 accent-purple-600" />
-                            </label>
+                            <div key={n} className="flex items-center justify-between p-3 rounded-xl transition-colors hover:bg-white" style={{ background: 'var(--color-surface-50)' }}>
+                                <span className="text-sm font-medium" style={{ color: 'var(--color-surface-700)' }}>{n}</span>
+                                <button
+                                    onClick={() => setToggles(p => ({ ...p, [n]: !p[n] }))}
+                                    className="relative flex items-center w-[42px] h-[24px] rounded-full p-1 transition-colors duration-300"
+                                    style={{ background: toggles[n] ? 'var(--color-brand-600)' : 'var(--color-surface-200)' }}
+                                >
+                                    <motion.div
+                                        layout
+                                        initial={false}
+                                        animate={{ x: toggles[n] ? 18 : 0 }}
+                                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                                        className="w-[18px] h-[18px] bg-white rounded-full shadow-sm"
+                                    />
+                                </button>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -98,8 +129,24 @@ export default function AdminSettings() {
                         </div>
                     </div>
                     <div className="mt-4 flex items-center gap-3">
-                        <button className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold" style={{ background: 'var(--color-surface-100)', color: 'var(--color-surface-700)' }}>
-                            <Zap className="w-3.5 h-3.5" />Test Connection
+                        <button
+                            onClick={handleTestConnection}
+                            disabled={testing}
+                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
+                            style={{
+                                background: testResult === 'success' ? 'var(--color-fresh-50)' : 'var(--color-surface-100)',
+                                color: testResult === 'success' ? 'var(--color-fresh-600)' : 'var(--color-surface-700)',
+                                opacity: testing ? 0.7 : 1
+                            }}
+                        >
+                            {testing ? (
+                                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} className="w-3.5 h-3.5 border-2 border-surface-400 border-t-transparent rounded-full" />
+                            ) : testResult === 'success' ? (
+                                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Zap className="w-3.5 h-3.5" /></motion.div>
+                            ) : (
+                                <Zap className="w-3.5 h-3.5" />
+                            )}
+                            {testing ? 'Testing...' : testResult === 'success' ? 'Connection OK' : 'Test Connection'}
                         </button>
                         <span className="text-xs" style={{ color: 'var(--color-surface-400)' }}>Estimated cost: ~$2–5/month for daily AI tasks</span>
                     </div>

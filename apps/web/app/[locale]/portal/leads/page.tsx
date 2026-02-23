@@ -1,6 +1,7 @@
 'use client';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MessageCircle, Clock, CheckCircle, XCircle, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, Phone, MessageCircle, Clock, CheckCircle, XCircle, ArrowUpRight, X, Send, Paperclip, Type } from 'lucide-react';
+import { useState } from 'react';
 
 const leads = [
     { name: 'Sarah Johnson', email: 'sarah@email.com', phone: '+44 7700 900123', listing: 'Modern Studio with Mekong View', message: 'Hi, I\'m very interested in this studio. I\'m moving to Phnom Penh next month and looking for a furnished place in BKK1. Can we schedule a viewing?', time: '5 min ago', status: 'new' as const },
@@ -17,6 +18,9 @@ const statusConfig = {
 };
 
 export default function PortalLeads() {
+    const [replyModal, setReplyModal] = useState<any | null>(null);
+    const [replyText, setReplyText] = useState('');
+
     return (
         <div className="p-6 md:p-8">
             <div className="flex items-center justify-between mb-6">
@@ -45,7 +49,7 @@ export default function PortalLeads() {
                             </div>
                             <p className="text-sm mb-4 pl-13" style={{ color: 'var(--color-surface-600)', paddingLeft: '52px' }}>{l.message}</p>
                             <div className="flex items-center gap-2 pl-13" style={{ paddingLeft: '52px' }}>
-                                <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'var(--color-brand-600)', color: 'white' }}><Mail className="w-3 h-3" />Reply</button>
+                                <button onClick={() => setReplyModal(l)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'var(--color-brand-600)', color: 'white' }}><Mail className="w-3 h-3" />Reply</button>
                                 <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: 'var(--color-fresh-50)', color: 'var(--color-fresh-700)', border: '1px solid var(--color-fresh-200)' }}><Phone className="w-3 h-3" />Call</button>
                                 <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium" style={{ background: '#e0f2fe', color: '#0369a1', border: '1px solid #bae6fd' }}><MessageCircle className="w-3 h-3" />Telegram</button>
                             </div>
@@ -53,6 +57,53 @@ export default function PortalLeads() {
                     );
                 })}
             </div>
+
+            {/* Reply Modal */}
+            <AnimatePresence>
+                {replyModal && (
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+                        <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="glass-card w-full max-w-2xl p-0 overflow-hidden flex flex-col" style={{ borderRadius: 'var(--radius-2xl)', background: 'white', maxHeight: '90vh' }}>
+                            {/* Header */}
+                            <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--color-surface-100)' }}>
+                                <div>
+                                    <h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Reply to {replyModal.name}</h2>
+                                    <p className="text-xs" style={{ color: 'var(--color-surface-500)' }}>Regarding: {replyModal.listing}</p>
+                                </div>
+                                <button onClick={() => setReplyModal(null)} className="p-2 rounded-lg hover:bg-gray-100"><X className="w-5 h-5" style={{ color: 'var(--color-surface-500)' }} /></button>
+                            </div>
+
+                            {/* Original Message */}
+                            <div className="px-6 py-4 bg-gray-50" style={{ borderBottom: '1px solid var(--color-surface-100)' }}>
+                                <div className="text-xs font-semibold mb-1" style={{ color: 'var(--color-surface-500)' }}>Original Message</div>
+                                <p className="text-sm italic" style={{ color: 'var(--color-surface-700)' }}>"{replyModal.message}"</p>
+                            </div>
+
+                            {/* Composer */}
+                            <div className="flex-1 p-6 flex flex-col min-h-[300px]">
+                                <div className="flex items-center gap-2 mb-3 pb-3" style={{ borderBottom: '1px solid var(--color-surface-100)' }}>
+                                    <button className="p-1.5 rounded hover:bg-gray-100" style={{ color: 'var(--color-surface-500)' }} title="Format Text"><Type className="w-4 h-4" /></button>
+                                    <button className="p-1.5 rounded hover:bg-gray-100" style={{ color: 'var(--color-surface-500)' }} title="Attach File"><Paperclip className="w-4 h-4" /></button>
+                                </div>
+                                <textarea
+                                    value={replyText}
+                                    onChange={(e) => setReplyText(e.target.value)}
+                                    className="flex-1 w-full text-sm outline-none resize-none"
+                                    placeholder="Write your reply here..."
+                                    autoFocus
+                                />
+                            </div>
+
+                            {/* Footer */}
+                            <div className="px-6 py-4 bg-gray-50 flex items-center justify-between" style={{ borderTop: '1px solid var(--color-surface-100)' }}>
+                                <button onClick={() => setReplyModal(null)} className="px-4 py-2.5 rounded-xl text-sm font-medium" style={{ color: 'var(--color-surface-600)' }}>Cancel</button>
+                                <button onClick={() => { alert('Message sent! (Demo)'); setReplyModal(null); setReplyText(''); }} className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all text-white" style={{ background: 'var(--color-brand-600)' }}>
+                                    <Send className="w-4 h-4" /> Send Reply
+                                </button>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

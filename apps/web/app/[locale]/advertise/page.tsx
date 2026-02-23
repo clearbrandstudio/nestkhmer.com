@@ -356,7 +356,7 @@ export default function AdvertisePage() {
             </section>
 
             {/* CTA */}
-            <section className="py-16" style={{ background: 'var(--color-surface-950)' }}>
+            <section className="py-20" style={{ background: 'var(--color-surface-950)' }}>
                 <div className="section-container text-center">
                     <h2 className="text-2xl font-bold text-white mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Need a Custom Campaign?</h2>
                     <p className="text-sm mb-6" style={{ color: 'var(--color-surface-400)' }}>For custom placements, sponsorships, or bulk deals — reach out to our team.</p>

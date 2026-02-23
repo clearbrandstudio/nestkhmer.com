@@ -70,7 +70,7 @@ export function Footer() {
                 }}
             />
 
-            <div className="section-container relative z-10 pt-20 pb-8">
+            <div className="section-container relative z-10 pt-16 pb-10">
                 {/* Main Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
                     {/* Brand Column */}
@@ -248,7 +248,7 @@ export function Footer() {
 
                 {/* Bottom Bar */}
                 <div
-                    className="mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
+                    className="mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4"
                     style={{ borderTop: '1px solid var(--color-surface-800)' }}
                 >
                     <p className="text-xs" style={{ color: 'var(--color-surface-500)' }}>

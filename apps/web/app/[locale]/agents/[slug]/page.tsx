@@ -18,7 +18,7 @@ export default function AgentProfilePage() {
     const locale = pathname.split('/')[1] || 'en';
     return (
         <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
-            <div className="section-container pt-8 pb-24">
+            <div className="section-container pt-8 pb-32">
                 <a href={`/${locale}/agents`} className="flex items-center gap-1 text-sm no-underline mb-6" style={{ color: 'var(--color-brand-600)' }}><ChevronLeft className="w-4 h-4" /> All Agents</a>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Profile Card */}

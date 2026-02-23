@@ -30,9 +30,17 @@ export default function ForAgentsPage() {
                             <span className="text-sm font-medium" style={{ color: 'var(--color-brand-700)' }}>For Real Estate Professionals</span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-bold mb-4 max-w-3xl mx-auto" style={{ fontFamily: 'var(--font-heading)' }}>Grow Your Business with <span style={{ color: 'var(--color-brand-600)' }}>Data-Driven</span> Reputation</h1>
-                        <p className="text-lg max-w-2xl mx-auto mb-8" style={{ color: 'var(--color-surface-500)' }}>NestKhmer rewards the best agents. Respond faster, list better, and watch your NestScore — and your leads — grow.</p>
+                        <p className="text-lg max-w-2xl mx-auto mb-6" style={{ color: 'var(--color-surface-500)' }}>NestKhmer rewards the best agents. Respond faster, list better, and watch your NestScore — and your leads — grow.</p>
+
+                        {/* Pioneer Program Banner */}
+                        <a href={`/${locale}/for-agents/pioneer`} className="inline-flex items-center gap-3 px-6 py-3 rounded-2xl mb-8 no-underline group transition-all hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(16,185,129,0.08))', border: '1px solid rgba(139,92,246,0.2)' }}>
+                            <span className="text-lg">🔥</span>
+                            <span className="text-sm font-semibold" style={{ color: 'var(--color-brand-700)' }}>Pioneer 100 — First 100 agents get 6 months Pro FREE</span>
+                            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" style={{ color: 'var(--color-brand-500)' }} />
+                        </a>
+
                         <div className="flex justify-center gap-4">
-                            <a href={`/${locale}/auth/register`} className="px-8 py-3 rounded-xl text-sm font-semibold no-underline" style={{ background: 'var(--color-brand-600)', color: 'white', fontFamily: 'var(--font-heading)' }}>Create Agent Account</a>
+                            <a href={`/${locale}/for-agents/pioneer`} className="px-8 py-3 rounded-xl text-sm font-semibold no-underline" style={{ background: 'var(--color-brand-600)', color: 'white', fontFamily: 'var(--font-heading)' }}>Claim Pioneer Spot</a>
                             <a href={`/${locale}/auth/login`} className="px-8 py-3 rounded-xl text-sm font-semibold no-underline" style={{ border: '1px solid var(--color-surface-200)', color: 'var(--color-surface-700)' }}>Sign In</a>
                         </div>
                     </motion.div>
@@ -58,7 +66,7 @@ export default function ForAgentsPage() {
             </section>
 
             {/* Pricing */}
-            <section className="py-20 pb-24">
+            <section className="py-20 pb-32">
                 <div className="section-container">
                     <h2 className="text-3xl font-bold text-center mb-4" style={{ fontFamily: 'var(--font-heading)' }}>Simple, Transparent Pricing</h2>
                     <p className="text-center mb-12" style={{ color: 'var(--color-surface-500)' }}>Start free. Upgrade when you&apos;re ready to grow.</p>

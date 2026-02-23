@@ -29,7 +29,7 @@ export default function ListingsPage() {
 
     return (
         <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
-            <div className="section-container pt-8 pb-24">
+            <div className="section-container pt-8 pb-32">
                 {/* Search Header */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
                     <h1 className="text-3xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>

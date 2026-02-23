@@ -18,7 +18,7 @@ const team = [
 export default function AboutPage() {
     return (
         <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
-            <div className="section-container pt-8 pb-24">
+            <div className="section-container pt-8 pb-32">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-16 max-w-3xl mx-auto">
                     <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>About NestKhmer</h1>
                     <p className="text-lg" style={{ color: 'var(--color-surface-500)', lineHeight: 1.7 }}>We started NestKhmer because renting in Cambodia shouldn&apos;t be a guessing game. Too many platforms are filled with stale listings, hidden fees, and unresponsive agents. We decided to fix that — with data, transparency, and technology.</p>

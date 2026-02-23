@@ -7,7 +7,7 @@ export default function ContactPage() {
     const [sent, setSent] = useState(false);
     return (
         <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
-            <div className="section-container pt-8 pb-24">
+            <div className="section-container pt-8 pb-32">
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
                     <h1 className="text-4xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)' }}>Get in Touch</h1>
                     <p className="text-lg max-w-lg mx-auto" style={{ color: 'var(--color-surface-500)' }}>Have a question, partnership proposal, or just want to say hi? We&apos;d love to hear from you.</p>

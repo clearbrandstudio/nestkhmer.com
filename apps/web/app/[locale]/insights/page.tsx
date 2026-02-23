@@ -35,7 +35,7 @@ export default function InsightsPage() {
 
     return (
         <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
-            <div className="section-container pt-8 pb-24">
+            <div className="section-container pt-8 pb-32">
                 {/* Header */}
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
                     <div className="flex items-center gap-3 mb-2">

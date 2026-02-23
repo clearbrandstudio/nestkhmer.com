@@ -30,7 +30,7 @@ export default function DistrictDetailPage() {
                     <p className="text-white/60">{d.nameKm}</p>
                 </div>
             </div>
-            <div className="section-container pt-8 pb-24">
+            <div className="section-container pt-8 pb-32">
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     {[{ icon: TrendingUp, label: 'Median Rent', val: `$${d.medianRent}/mo`, color: 'var(--color-brand-600)' }, { icon: Home, label: 'Active Listings', val: d.listings, color: 'var(--color-fresh-600)' }, { icon: Clock, label: 'Avg Time to Let', val: `${d.avgDays} days`, color: 'var(--color-warn-600)' }, { icon: MapPin, label: 'Walkability', val: `${d.walkability}/100`, color: 'var(--color-surface-700)' }].map(s => {

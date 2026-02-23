@@ -31,6 +31,7 @@ export function Footer() {
         { label: t('blog'), href: `/${currentLocale}/blog` },
         { label: t('contact'), href: `/${currentLocale}/contact` },
         { label: t('forAgents'), href: `/${currentLocale}/for-agents` },
+        { label: '🔥 Pioneer 100', href: `/${currentLocale}/for-agents/pioneer` },
     ];
 
     const resourceLinks = [
@@ -70,9 +71,9 @@ export function Footer() {
                 }}
             />
 
-            <div className="section-container relative z-10 pt-16 pb-10">
+            <div className="section-container relative z-10 pt-20 pb-12">
                 {/* Main Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
                     {/* Brand Column */}
                     <div className="lg:col-span-1">
                         <a

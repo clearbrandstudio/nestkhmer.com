@@ -110,7 +110,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
                 email,
                 password,
                 name,
-                role: role
+                role: role || 'tenant'
             } as any);
             if (error) {
                 console.error("Registration failed:", error);

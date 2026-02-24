@@ -293,30 +293,7 @@ export default function LoginPage() {
                     )}
                 </div>
 
-                {/* Demo Accounts */}
-                {mode === 'main' && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-6 glass-card p-5" style={{ borderRadius: 'var(--radius-xl)' }}>
-                        <p className="text-xs font-semibold mb-3 uppercase tracking-wider" style={{ color: 'var(--color-surface-500)' }}>
-                            Quick Demo Login
-                        </p>
-                        <div className="space-y-2">
-                            {[
-                                { label: 'Admin', email: 'admin@nestkhmer.com', password: 'admin123', color: 'var(--color-danger-500)' },
-                                { label: 'Agent', email: 'agent@nestkhmer.com', password: 'agent123', color: 'var(--color-brand-500)' },
-                                { label: 'Tenant', email: 'tenant@nestkhmer.com', password: 'tenant123', color: 'var(--color-fresh-500)' },
-                            ].map((demo) => (
-                                <button key={demo.email} onClick={() => quickLogin(demo.email, demo.password)} className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-sm transition-all" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-100)', color: 'var(--color-surface-700)' }}>
-                                    <div className="flex items-center gap-2">
-                                        <div className="w-2 h-2 rounded-full" style={{ background: demo.color }} />
-                                        <span className="font-medium">{demo.label}</span>
-                                        <span style={{ color: 'var(--color-surface-400)' }}>{demo.email}</span>
-                                    </div>
-                                    <ArrowRight className="w-3.5 h-3.5" style={{ color: 'var(--color-surface-400)' }} />
-                                </button>
-                            ))}
-                        </div>
-                    </motion.div>
-                )}
+                {/* Demo Accounts Removed for Production */}
             </motion.div>
         </div>
     );

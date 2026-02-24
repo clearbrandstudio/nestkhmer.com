@@ -60,10 +60,14 @@ export async function seed() {
     }
 
     console.log('🎉 Seeding Complete! Passwords for all accounts are set to: nestkhmer2026');
-    process.exit(0);
 }
 
-seed().catch((err) => {
-    console.error('❌ Seeding failed:', err);
-    process.exit(1);
-});
+// Only run automatically if executed directly via CLI
+if (require.main === module) {
+    seed().then(() => {
+        process.exit(0);
+    }).catch((err) => {
+        console.error('❌ Seeding failed:', err);
+        process.exit(1);
+    });
+}

@@ -14,7 +14,7 @@
         "db:pre-migrate": "npx tsx src/db/pre-migrate.ts",
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",
-        "db:push": "drizzle-kit push",
+        "db:push": "drizzle-kit push --force",
         "db:seed": "npx tsx src/db/seed.ts"
     },
     "dependencies": {

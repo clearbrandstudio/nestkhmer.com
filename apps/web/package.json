@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "next dev --turbopack -p 3000",
         "build": "next build",
-        "start": "next start",
+        "start": "npm run db:push --workspace=@nestkhmer/shared && next start",
         "lint": "next lint",
         "typecheck": "tsc --noEmit"
     },

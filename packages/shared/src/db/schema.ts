@@ -16,15 +16,55 @@ import {
 // ═══════════════════════════════════════════════
 
 export const users = pgTable('users', {
-    id: uuid('id').primaryKey().defaultRandom(),
+    id: varchar('id', { length: 36 }).primaryKey(),
     email: varchar('email', { length: 255 }).notNull().unique(),
     name: varchar('name', { length: 255 }).notNull(),
+    emailVerified: boolean('email_verified').default(false).notNull(),
+    image: text('image'),
+
+    // Custom Fields
     passwordHash: text('password_hash'),
     role: varchar('role', { length: 20 }).notNull().default('tenant'), // tenant | agent | admin
     avatar: text('avatar'),
     locale: varchar('locale', { length: 5 }).default('en'),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+    createdAt: timestamp('created_at').notNull(),
+    updatedAt: timestamp('updated_at').notNull(),
+});
+
+export const session = pgTable("session", {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    expiresAt: timestamp("expires_at").notNull(),
+    token: varchar("token", { length: 255 }).notNull().unique(),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull(),
+    ipAddress: text("ip_address"),
+    userAgent: text("user_agent"),
+    userId: varchar("user_id", { length: 36 }).notNull().references(() => users.id)
+});
+
+export const account = pgTable("account", {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    userId: varchar("user_id", { length: 36 }).notNull().references(() => users.id),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    idToken: text("id_token"),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    scope: text("scope"),
+    password: text("password"),
+    createdAt: timestamp("created_at").notNull(),
+    updatedAt: timestamp("updated_at").notNull()
+});
+
+export const verification = pgTable("verification", {
+    id: varchar("id", { length: 36 }).primaryKey(),
+    identifier: text("identifier").notNull(),
+    value: text("value").notNull(),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at"),
+    updatedAt: timestamp("updated_at")
 });
 
 // ═══════════════════════════════════════════════
@@ -35,7 +75,7 @@ export const agents = pgTable(
     'agents',
     {
         id: uuid('id').primaryKey().defaultRandom(),
-        userId: uuid('user_id')
+        userId: varchar('user_id', { length: 36 })
             .notNull()
             .references(() => users.id)
             .unique(),
@@ -216,7 +256,7 @@ export const blogPosts = pgTable(
         contentEn: text('content_en').notNull(),
         contentKm: text('content_km'),
         contentZh: text('content_zh'),
-        authorId: uuid('author_id').references(() => users.id),
+        authorId: varchar('author_id', { length: 36 }).references(() => users.id),
         category: varchar('category', { length: 100 }),
         status: varchar('status', { length: 20 }).notNull().default('draft'),
         publishedAt: timestamp('published_at'),

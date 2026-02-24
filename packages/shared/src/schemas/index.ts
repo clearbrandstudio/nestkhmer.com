@@ -1,8 +1,8 @@
-export { createListingSchema, updateListingSchema, propertyTypes, furnishingLevels, petPolicies, parkingOptions, listingStatuses } from './listing.js';
-export type { CreateListingInput, UpdateListingInput } from './listing.js';
+export { createListingSchema, updateListingSchema, propertyTypes, furnishingLevels, petPolicies, parkingOptions, listingStatuses } from './listing';
+export type { CreateListingInput, UpdateListingInput } from './listing';
 
-export { agentProfileSchema, subscriptionTiers, kycStatuses, badgeTypes } from './agent.js';
-export type { AgentProfileInput } from './agent.js';
+export { agentProfileSchema, subscriptionTiers, kycStatuses, badgeTypes } from './agent';
+export type { AgentProfileInput } from './agent';
 
-export { districtSchema } from './district.js';
-export type { DistrictInput } from './district.js';
+export { districtSchema } from './district';
+export type { DistrictInput } from './district';

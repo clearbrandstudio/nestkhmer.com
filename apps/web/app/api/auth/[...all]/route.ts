@@ -2,6 +2,8 @@ import { auth } from '@nestkhmer/shared';
 import { toNextJsHandler } from 'better-auth/next-js';
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const { GET: authGET, POST: authPOST } = toNextJsHandler(auth.handler);
 
 export async function GET(req: NextRequest) {

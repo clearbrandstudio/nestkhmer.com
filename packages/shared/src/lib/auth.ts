@@ -6,6 +6,7 @@ import * as schema from '../db/schema';
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET || 'super-secret-development-string-for-nestkhmer',
     baseURL: process.env.BETTER_AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    trustedOrigins: ['https://nestkhmer.com', 'https://www.nestkhmer.com'],
     database: drizzleAdapter(db, {
         provider: 'pg',
         schema: {

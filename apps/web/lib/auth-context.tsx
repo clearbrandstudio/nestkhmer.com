@@ -68,10 +68,14 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
 
     const loginWithGoogle = async (): Promise<boolean> => {
         try {
-            await signIn.social({
+            const { data, error } = await signIn.social({
                 provider: "google",
                 callbackURL: window.location.origin
             });
+            if (error) {
+                console.error("Google login failed:", error);
+                return false;
+            }
             return true;
         } catch (err) {
             console.error(err);

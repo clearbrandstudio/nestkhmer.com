@@ -1,15 +1,21 @@
-import { auth } from '@nestkhmer/shared';
+import { auth } from '@nestkhmer/shared/src/lib/auth';
 import { toNextJsHandler } from 'better-auth/next-js';
+import { NextRequest, NextResponse } from "next/server";
 
-const handler = toNextJsHandler(auth.handler);
+const { GET: authGET, POST: authPOST } = toNextJsHandler(auth.handler);
 
-export const POST = async (req: Request) => {
+export async function GET(req: NextRequest) {
     try {
-        return await handler.POST(req);
+        return await authGET(req);
     } catch (e: any) {
-        console.error("/// BETTER AUTH POST ERROR ///", e);
-        return new Response(e.message || "Internal Error", { status: 500 });
+        return NextResponse.json({ error: e.message, stack: e.stack }, { status: 500 });
     }
-};
+}
 
-export const GET = handler.GET;
+export async function POST(req: NextRequest) {
+    try {
+        return await authPOST(req);
+    } catch (e: any) {
+        return NextResponse.json({ error: e.message, stack: e.stack, name: e.name }, { status: 500 });
+    }
+}

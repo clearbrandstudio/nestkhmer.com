@@ -9,6 +9,11 @@ export async function GET() {
         return NextResponse.json({
             success: true,
             message: "Database connection established successfully.",
+            env: {
+                database: process.env.DATABASE_URL ? "URL IS SET" : "URL IS MISSING",
+                betterAuthUrl: process.env.BETTER_AUTH_URL || 'missing',
+                nextPublicSiteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'missing'
+            },
             data: test
         });
     } catch (e: any) {
@@ -16,7 +21,11 @@ export async function GET() {
             success: false,
             error: e.message,
             stack: e.stack,
-            env: process.env.DATABASE_URL ? "URL IS SET" : "URL IS MISSING"
+            env: {
+                database: process.env.DATABASE_URL ? "URL IS SET" : "URL IS MISSING",
+                betterAuthUrl: process.env.BETTER_AUTH_URL || 'missing',
+                nextPublicSiteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'missing'
+            }
         }, { status: 500 });
     }
 }

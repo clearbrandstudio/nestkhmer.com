@@ -1,10 +1,9 @@
-import { db } from '@nestkhmer/shared';
-import { users } from '@nestkhmer/shared/src/db/schema';
+import { db, schema } from '@nestkhmer/shared';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
-        const test = await db.select().from(users).limit(1);
+        const test = await db.select().from(schema.users).limit(1);
         return NextResponse.json({
             success: true,
             message: "Database connection established successfully.",

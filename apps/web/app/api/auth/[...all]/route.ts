@@ -1,4 +1,4 @@
-import { auth } from '@nestkhmer/shared/src/lib/auth';
+import { auth } from '@nestkhmer/shared';
 import { toNextJsHandler } from 'better-auth/next-js';
 import { NextRequest, NextResponse } from "next/server";
 

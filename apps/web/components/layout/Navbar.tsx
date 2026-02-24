@@ -10,7 +10,10 @@ import {
     X,
     Globe,
     Home,
+    LogOut,
+    LayoutDashboard
 } from 'lucide-react';
+import { useAuth } from '@/lib/auth-context';
 
 const localeLabels: Record<string, string> = {
     en: 'EN',
@@ -24,6 +27,8 @@ export function Navbar() {
     const router = useRouter();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [langOpen, setLangOpen] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
+    const { user, isLoading, logout } = useAuth();
 
     const currentLocale = pathname.split('/')[1] || 'en';
 
@@ -136,27 +141,92 @@ export function Navbar() {
                             </AnimatePresence>
                         </div>
 
+                        {/* Auth State / Profile */}
+                        {!isLoading && user ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() => setProfileOpen(!profileOpen)}
+                                    className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-full transition-all border outline-none cursor-pointer"
+                                    style={{
+                                        background: 'var(--color-surface-50)',
+                                        borderColor: 'var(--color-surface-200)',
+                                    }}
+                                >
+                                    {user.avatar ? (
+                                        <div className="w-7 h-7 rounded-full bg-cover bg-center shrink-0" style={{ backgroundImage: `url(${user.avatar})` }} />
+                                    ) : (
+                                        <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs shrink-0" style={{ background: 'var(--color-brand-100)', color: 'var(--color-brand-700)' }}>
+                                            {user.name?.charAt(0).toUpperCase() || 'U'}
+                                        </div>
+                                    )}
+                                    <span className="hidden sm:block text-sm font-medium max-w-[100px] truncate" style={{ color: 'var(--color-surface-700)' }}>{user.name}</span>
+                                </button>
+                                <AnimatePresence>
+                                    {profileOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                                            transition={{ duration: 0.15 }}
+                                            className="absolute right-0 top-full mt-2 glass-card overflow-hidden z-50 py-1"
+                                            style={{ minWidth: '200px' }}
+                                        >
+                                            <div className="px-4 py-2 border-b border-surface-100 mb-1">
+                                                <p className="text-sm font-bold truncate" style={{ color: 'var(--color-surface-900)' }}>{user.name}</p>
+                                                <p className="text-xs truncate" style={{ color: 'var(--color-surface-500)' }}>{user.email}</p>
+                                            </div>
+                                            <a
+                                                href={`/${currentLocale}/portal/dashboard`}
+                                                className="w-full px-4 py-2.5 text-left text-sm font-medium transition-colors flex items-center gap-2 no-underline hover:bg-surface-50"
+                                                style={{ color: 'var(--color-surface-700)' }}
+                                            >
+                                                <LayoutDashboard className="w-4 h-4" /> Dashboard
+                                            </a>
+                                            <button
+                                                onClick={() => { setProfileOpen(false); logout(); }}
+                                                className="w-full px-4 py-2.5 text-left text-sm font-medium transition-colors flex items-center gap-2 text-rose-600 hover:bg-rose-50"
+                                            >
+                                                <LogOut className="w-4 h-4" /> Sign Out
+                                            </button>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        ) : !isLoading ? (
+                            <a
+                                href={`/${currentLocale}/auth/login`}
+                                className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-sm font-bold transition-all no-underline"
+                                style={{ color: 'var(--color-surface-700)' }}
+                                onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'var(--color-surface-100)' }}
+                                onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'transparent' }}
+                            >
+                                Sign In
+                            </a>
+                        ) : null}
+
                         {/* CTA */}
-                        <a
-                            href={`/${currentLocale}/for-agents`}
-                            className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold no-underline transition-all"
-                            style={{
-                                background: 'var(--color-brand-600)',
-                                color: 'white',
-                                fontFamily: 'var(--font-heading)',
-                                boxShadow: '0 2px 12px rgba(139, 79, 255, 0.3)',
-                            }}
-                            onMouseEnter={(e) => {
-                                (e.target as HTMLElement).style.background = 'var(--color-brand-700)';
-                                (e.target as HTMLElement).style.transform = 'translateY(-1px)';
-                            }}
-                            onMouseLeave={(e) => {
-                                (e.target as HTMLElement).style.background = 'var(--color-brand-600)';
-                                (e.target as HTMLElement).style.transform = 'translateY(0)';
-                            }}
-                        >
-                            {t('listProperty')}
-                        </a>
+                        {(!user || user.role !== 'tenant') && (
+                            <a
+                                href={`/${currentLocale}/for-agents`}
+                                className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold no-underline transition-all"
+                                style={{
+                                    background: 'var(--color-brand-600)',
+                                    color: 'white',
+                                    fontFamily: 'var(--font-heading)',
+                                    boxShadow: '0 2px 12px rgba(139, 79, 255, 0.3)',
+                                }}
+                                onMouseEnter={(e) => {
+                                    (e.target as HTMLElement).style.background = 'var(--color-brand-700)';
+                                    (e.target as HTMLElement).style.transform = 'translateY(-1px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    (e.target as HTMLElement).style.background = 'var(--color-brand-600)';
+                                    (e.target as HTMLElement).style.transform = 'translateY(0)';
+                                }}
+                            >
+                                {t('listProperty')}
+                            </a>
+                        )}
 
                         {/* Mobile Toggle */}
                         <button
@@ -190,16 +260,32 @@ export function Navbar() {
                                         {link.label}
                                     </a>
                                 ))}
-                                <a
-                                    href={`/${currentLocale}/for-agents`}
-                                    className="mt-2 px-4 py-3 rounded-xl text-sm font-semibold text-center no-underline"
-                                    style={{
-                                        background: 'var(--color-brand-600)',
-                                        color: 'white',
-                                    }}
-                                >
-                                    {t('listProperty')}
-                                </a>
+                                {!isLoading && user ? (
+                                    <>
+                                        <a href={`/${currentLocale}/portal/dashboard`} className="px-4 py-3 rounded-lg text-sm font-medium no-underline flex items-center gap-2" style={{ color: 'var(--color-surface-700)' }}>
+                                            <LayoutDashboard className="w-4 h-4" /> Dashboard
+                                        </a>
+                                        <button onClick={() => logout()} className="px-4 py-3 text-left rounded-lg text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-rose-600)' }}>
+                                            <LogOut className="w-4 h-4" /> Sign Out
+                                        </button>
+                                    </>
+                                ) : (
+                                    <a href={`/${currentLocale}/auth/login`} className="px-4 py-3 rounded-lg text-sm font-medium no-underline" style={{ color: 'var(--color-surface-700)' }}>
+                                        Sign In
+                                    </a>
+                                )}
+                                {(!user || user.role !== 'tenant') && (
+                                    <a
+                                        href={`/${currentLocale}/for-agents`}
+                                        className="mt-2 px-4 py-3 rounded-xl text-sm font-semibold text-center no-underline"
+                                        style={{
+                                            background: 'var(--color-brand-600)',
+                                            color: 'white',
+                                        }}
+                                    >
+                                        {t('listProperty')}
+                                    </a>
+                                )}
                             </nav>
                         </motion.div>
                     )}

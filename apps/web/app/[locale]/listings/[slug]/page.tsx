@@ -107,9 +107,6 @@ export default function ListingDetailPage() {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const listingSlug = pathname.split('/').pop() || 'listing';
 
-    // Mock authentication state for demonstration
-    const isLoggedIn = false;
-
     return (
         <div className="min-h-screen pt-[100px]" style={{ background: 'var(--color-surface-50)' }}>
             {/* Back Nav */}
@@ -242,9 +239,8 @@ export default function ListingDetailPage() {
                                     </div>
                                 </div>
 
-                                {/* Detailed Interactive Map Area */}
                                 <div className="mb-6 h-[400px]">
-                                    <MapWrapper listing={listing} isLoggedIn={isLoggedIn} />
+                                    <MapWrapper listing={listing} />
                                 </div>
 
                                 {/* Distances to Landmarks */}

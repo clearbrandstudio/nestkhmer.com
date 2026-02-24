@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useAuth } from '@/lib/auth-context';
 
 const PropertyMap = dynamic(() => import('./PropertyMap'), {
     ssr: false,
@@ -12,7 +13,10 @@ const PropertyMap = dynamic(() => import('./PropertyMap'), {
     )
 });
 
-export default function MapWrapper({ listing, isLoggedIn = false }: { listing: any, isLoggedIn?: boolean }) {
+export default function MapWrapper({ listing, isLoggedIn: propIsLoggedIn }: { listing: any, isLoggedIn?: boolean }) {
+    const { user } = useAuth();
+    const isLoggedIn = propIsLoggedIn !== undefined ? propIsLoggedIn : !!user;
+
     // Simple logic to fetch nearby landmarks based on the district string
     let landmarks = [];
     const dist = listing.district?.toLowerCase() || '';

@@ -1,12 +1,14 @@
 'use client';
 import { motion } from 'framer-motion';
-import { Save, Globe, Bell, Shield, Palette, Database, Mail as MailIcon, Link as LinkIcon, Cpu, Zap } from 'lucide-react';
+import { Save, Globe, Bell, Shield, Database, Mail as MailIcon, Link as LinkIcon, Cpu, Layout, Bot, Key, AlignLeft, BarChart2 } from 'lucide-react';
 import { useState } from 'react';
 
 export default function AdminSettings() {
     const [saved, setSaved] = useState(false);
     const [testing, setTesting] = useState(false);
     const [testResult, setTestResult] = useState<'idle' | 'success' | 'error'>('idle');
+    const [aiSaved, setAiSaved] = useState(false);
+    const [cmsSaved, setCmsSaved] = useState(false);
     const [toggles, setToggles] = useState<Record<string, boolean>>({
         'New agent registration': true,
         'KYC submission': true,
@@ -102,54 +104,84 @@ export default function AdminSettings() {
                     </div>
                 </div>
 
-                {/* AI / LLM Configuration */}
+                {/* AI Integration Hub */}
                 <div className="glass-card p-6" style={{ borderRadius: 'var(--radius-xl)' }}>
-                    <div className="flex items-center gap-2 mb-2"><Cpu className="w-5 h-5" style={{ color: 'var(--color-brand-500)' }} /><h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>AI / LLM Configuration</h2></div>
-                    <p className="text-xs mb-4" style={{ color: 'var(--color-surface-400)' }}>Connect an AI model for automated market summaries, listing SEO, and smart matching.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2"><Cpu className="w-5 h-5 text-purple-600" /><h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>AI Integration Hub</h2></div>
+                        <button onClick={() => { setAiSaved(true); setTimeout(() => setAiSaved(false), 2000); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-purple-50 text-purple-700 hover:bg-purple-100 transition-colors"><Save className="w-3.5 h-3.5" />{aiSaved ? 'Saved API Keys' : 'Save AI Config'}</button>
+                    </div>
+                    <p className="text-sm mb-6 pb-4 border-b border-gray-100" style={{ color: 'var(--color-surface-500)' }}>Configure the Large Language Models and Bot infrastructure that powers NestKhmer's autonomous agent features.</p>
+
+                    <div className="space-y-6">
                         <div>
-                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>Provider</label>
-                            <select defaultValue="openrouter" className="w-full px-4 py-2.5 rounded-xl text-sm" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }}>
-                                <option value="openrouter">OpenRouter</option>
-                                <option value="ollama">Ollama (Local)</option>
-                                <option value="openai">OpenAI</option>
-                            </select>
+                            <label className="text-sm font-semibold mb-1.5 flex items-center gap-2" style={{ color: 'var(--color-surface-800)' }}><Bot className="w-4 h-4 text-blue-500" /> Telegram Bot API Key</label>
+                            <p className="text-xs mb-2" style={{ color: 'var(--color-surface-500)' }}>Used for pushing instant notifications to agents and managing leads directly via Telegram.</p>
+                            <div className="relative">
+                                <Key className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <input type="password" placeholder="bot123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11" className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none font-mono" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                            </div>
                         </div>
+
                         <div>
-                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>Model</label>
-                            <input defaultValue="meta-llama/llama-3.1-8b-instruct" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                            <label className="text-sm font-semibold mb-1.5 flex items-center gap-2" style={{ color: 'var(--color-surface-800)' }}><Cpu className="w-4 h-4 text-emerald-500" /> OpenRouter API Key <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded uppercase">Primary LLM</span></label>
+                            <p className="text-xs mb-2" style={{ color: 'var(--color-surface-500)' }}>Connects the platform to models like Claude 3.5 Sonnet to autonomously draft property descriptions and summarize market trends.</p>
+                            <div className="relative">
+                                <Key className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                                <input type="password" placeholder="sk-or-v1-xxxxxxxxxxxxxxxxxxxx" className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none font-mono" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                            </div>
                         </div>
+
                         <div>
-                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>API Key</label>
-                            <input type="password" defaultValue="" placeholder="sk-or-..." className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
-                        </div>
-                        <div>
-                            <label className="text-sm font-medium mb-1.5 block" style={{ color: 'var(--color-surface-700)' }}>Base URL</label>
-                            <input defaultValue="https://openrouter.ai/api/v1" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                            <label className="text-sm font-semibold mb-1.5 flex items-center gap-2" style={{ color: 'var(--color-surface-800)' }}><AlignLeft className="w-4 h-4 text-orange-500" /> Agent System Directives (MCP)</label>
+                            <p className="text-xs mb-2" style={{ color: 'var(--color-surface-500)' }}>The core system prompt guiding how the integrated AI agents behave, format data, and respond to users.</p>
+                            <textarea rows={4} placeholder="You are an expert real estate AI assistant for NestKhmer. Your goal is to maximize lead conversion and provide highly accurate market valuations based on Phnom Penh districts..." className="w-full px-4 py-3 rounded-xl text-sm outline-none resize-none font-mono" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
                         </div>
                     </div>
-                    <div className="mt-4 flex items-center gap-3">
-                        <button
-                            onClick={handleTestConnection}
-                            disabled={testing}
-                            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all"
-                            style={{
-                                background: testResult === 'success' ? 'var(--color-fresh-50)' : 'var(--color-surface-100)',
-                                color: testResult === 'success' ? 'var(--color-fresh-600)' : 'var(--color-surface-700)',
-                                opacity: testing ? 0.7 : 1
-                            }}
-                        >
-                            {testing ? (
-                                <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: 'linear' }} className="w-3.5 h-3.5 border-2 border-surface-400 border-t-transparent rounded-full" />
-                            ) : testResult === 'success' ? (
-                                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}><Zap className="w-3.5 h-3.5" /></motion.div>
-                            ) : (
-                                <Zap className="w-3.5 h-3.5" />
-                            )}
-                            {testing ? 'Testing...' : testResult === 'success' ? 'Connection OK' : 'Test Connection'}
-                        </button>
-                        <span className="text-xs" style={{ color: 'var(--color-surface-400)' }}>Estimated cost: ~$2–5/month for daily AI tasks</span>
+                </div>
+
+                {/* Global CMS Settings */}
+                <div className="glass-card p-6" style={{ borderRadius: 'var(--radius-xl)' }}>
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-2"><Layout className="w-5 h-5 text-blue-600" /><h2 className="text-lg font-bold" style={{ fontFamily: 'var(--font-heading)' }}>Global Component CMS</h2></div>
+                        <button onClick={() => { setCmsSaved(true); setTimeout(() => setCmsSaved(false), 2000); }} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"><Save className="w-3.5 h-3.5" />{cmsSaved ? 'Saved Content' : 'Save CMS Data'}</button>
                     </div>
+                    <p className="text-sm mb-6 pb-4 border-b border-gray-100" style={{ color: 'var(--color-surface-500)' }}>Manage site-wide text strings, footer details, and default Artificial Intelligence Optimization (AIO) & SEO metadata.</p>
+
+                    <div className="space-y-6">
+                        <div>
+                            <label className="text-sm font-semibold mb-1.5 flex items-center gap-2" style={{ color: 'var(--color-surface-800)' }}><BarChart2 className="w-4 h-4 text-green-600" /> Default SEO / AIO Title Format</label>
+                            <p className="text-xs mb-2" style={{ color: 'var(--color-surface-500)' }}>The fallback title structure used to outrank competitors. AI tools will scrape this.</p>
+                            <input defaultValue="NestKhmer - Premium Real Estate & Property in Cambodia" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                        </div>
+
+                        <div>
+                            <label className="text-sm font-semibold mb-1.5 flex items-center gap-2" style={{ color: 'var(--color-surface-800)' }}><AlignLeft className="w-4 h-4 text-gray-500" /> Global Footer Tagline</label>
+                            <p className="text-xs mb-2" style={{ color: 'var(--color-surface-500)' }}>Appears on the bottom left of the global footer components.</p>
+                            <textarea rows={2} defaultValue="Cambodia's premier real estate platform connecting expats and locals with verified, high-quality properties across the Kingdom." className="w-full px-4 py-2.5 rounded-xl text-sm outline-none resize-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="text-sm font-semibold mb-1.5 block" style={{ color: 'var(--color-surface-800)' }}>Global Contact Email</label>
+                                <input defaultValue="hello@nestkhmer.com" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                            </div>
+                            <div>
+                                <label className="text-sm font-semibold mb-1.5 block" style={{ color: 'var(--color-surface-800)' }}>Global Contact Phone</label>
+                                <input defaultValue="+855 12 345 678" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label className="text-sm font-semibold mb-1.5 block" style={{ color: 'var(--color-surface-800)' }}>Office Address</label>
+                            <input defaultValue="Exchange Square, 19th Floor, Street 106, Phnom Penh" className="w-full px-4 py-2.5 rounded-xl text-sm outline-none" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)' }} />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex justify-end pt-4">
+                    <button onClick={handleTestConnection} disabled={testing} className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold shadow-sm transition-transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed" style={{ background: 'var(--color-surface-900)', color: 'white' }}>
+                        {testing ? <><Database className="w-4 h-4 animate-spin" /> Connecting...</> : testResult === 'success' ? <><Database className="w-4 h-4 text-green-400" /> Connection Successful!</> : <><Database className="w-4 h-4" /> Test Database Connection</>}
+                    </button>
                 </div>
             </div>
         </div>

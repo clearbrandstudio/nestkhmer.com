@@ -1,6 +1,8 @@
 import { db, schema } from '@nestkhmer/shared';
 import { NextResponse } from 'next/server';
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
     try {
         const test = await db.select().from(schema.users).limit(1);

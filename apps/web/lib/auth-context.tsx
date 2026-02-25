@@ -59,6 +59,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
                 console.error("Login failed:", error);
                 return false;
             }
+            router.refresh();
             return true;
         } catch (err) {
             console.error(err);
@@ -76,6 +77,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
                 console.error("Google login failed:", error);
                 return false;
             }
+            router.refresh();
             return true;
         } catch (err) {
             console.error(err);
@@ -92,6 +94,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
                 console.error("Phone login failed:", error);
                 return { success: false, requiresOtp: false };
             }
+            router.refresh();
             return { success: true, requiresOtp: true };
         } catch (err) {
             console.error(err);
@@ -109,6 +112,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
                 console.error("OTP verification failed:", error);
                 return false;
             }
+            router.refresh();
             return true;
         } catch (err) {
             console.error(err);
@@ -128,6 +132,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
                 console.error("Registration failed:", error);
                 return false;
             }
+            router.refresh();
             return true;
         } catch (err) {
             console.error(err);

@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useAuth, type UserRole } from '@/lib/auth-context';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Mail, Lock, User, ArrowRight, Building2, Phone, ChevronLeft, AlertCircle } from 'lucide-react';
+import { Home, Mail, Lock, User, ArrowRight, Building2, Phone, ChevronLeft, AlertCircle, MessageCircle } from 'lucide-react';
+import { TelegramLoginButton } from '@/components/auth/TelegramLoginButton';
 
 /* ─── Google Logo SVG ─── */
 function GoogleLogo({ className }: { className?: string }) {
@@ -18,7 +19,7 @@ function GoogleLogo({ className }: { className?: string }) {
     );
 }
 
-type RegisterMode = 'main' | 'phone' | 'otp';
+type RegisterMode = 'main' | 'phone' | 'otp' | 'telegram';
 
 export default function RegisterPage() {
     const { register, loginWithGoogle, loginWithPhone, verifyOtp } = useAuth();
@@ -112,6 +113,10 @@ export default function RegisterPage() {
                                     <button onClick={() => { setMode('phone'); setError(''); }} className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-semibold transition-all" style={{ background: 'var(--color-surface-50)', border: '1px solid var(--color-surface-200)', color: 'var(--color-surface-700)' }}>
                                         <Phone className="w-4.5 h-4.5" />
                                         Sign up with Phone Number
+                                    </button>
+                                    <button onClick={() => { setMode('telegram'); setError(''); }} className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-semibold transition-all hover:bg-[#2CA5E0] hover:text-white" style={{ background: '#0088CC', color: 'white', border: '1px solid #00adef' }}>
+                                        <MessageCircle className="w-4.5 h-4.5" fill="currentColor" />
+                                        Sign up with Telegram (Free)
                                     </button>
                                 </div>
 
@@ -216,6 +221,29 @@ export default function RegisterPage() {
                                         {loading ? 'Verifying...' : 'Verify & Create Account'} {!loading && <ArrowRight className="w-4 h-4" />}
                                     </button>
                                 </form>
+                            </motion.div>
+                        )}
+
+                        {mode === 'telegram' && (
+                            <motion.div key="telegram" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                                <button onClick={() => { setMode('main'); setError(''); }} className="flex items-center gap-1 text-sm mb-4" style={{ color: 'var(--color-brand-600)' }}>
+                                    <ChevronLeft className="w-4 h-4" /> Back
+                                </button>
+                                <div className="text-center py-6">
+                                    <div className="w-16 h-16 rounded-full mx-auto flex items-center justify-center mb-4" style={{ background: 'rgba(0, 136, 204, 0.1)' }}>
+                                        <MessageCircle className="w-8 h-8" style={{ color: '#0088CC' }} fill="currentColor" />
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>Fast & Secure Login</h3>
+                                    <p className="text-sm px-4 mb-6 leading-relaxed" style={{ color: 'var(--color-surface-600)' }}>
+                                        No passwords or SMS codes required! Use your existing Telegram account to register instantly.
+                                    </p>
+                                    <div className="bg-[#f0f9ff] py-6 px-4 rounded-xl border border-[#bae6fd]">
+                                        <TelegramLoginButton botName={process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || 'NestKhmerBot'} />
+                                    </div>
+                                    <p className="text-xs mt-6 px-6" style={{ color: 'var(--color-surface-400)' }}>
+                                        By signing up via Telegram, you agree to NestKhmer's Terms & Conditions and acknowledge our Privacy Policy.
+                                    </p>
+                                </div>
                             </motion.div>
                         )}
                     </AnimatePresence>

@@ -10,7 +10,15 @@ export async function GET() {
         try {
             await db.execute(sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS email_verified boolean DEFAULT false NOT NULL;`);
         } catch (alterError) {
-            console.error("Column already exists or alter failed:", alterError);
+            console.error("Column email_verified already exists or alter failed:", alterError);
+        }
+
+        // Forcefully repair table constraints that might be blocking Google OAuth insertions
+        try {
+            await db.execute(sql`ALTER TABLE users ALTER COLUMN role SET DEFAULT 'tenant';`);
+            await db.execute(sql`ALTER TABLE users ALTER COLUMN name DROP NOT NULL;`);
+        } catch (alterError) {
+            console.error("Constraint relaxations failed:", alterError);
         }
 
         const tables = await db.execute(sql`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';`);

@@ -74,31 +74,44 @@ export async function POST(req: NextRequest) {
             user = newUser[0];
         }
 
-        // 4. Create Better Auth Session
+        // 4. Create Better Auth Session manually in the DB
         const sessionToken = crypto.randomUUID();
         const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 Days
 
-        const session = await db.insert(schema.session).values({
+        await db.insert(schema.session).values({
             id: sessionToken,
+            token: sessionToken,
             userId: user.id,
             expiresAt: expiresAt,
-            token: sessionToken,
             createdAt: new Date(),
             updatedAt: new Date(),
             ipAddress: req.headers.get('x-forwarded-for') || null,
             userAgent: req.headers.get('user-agent') || null,
-        }).returning();
+        });
 
-        // 5. Build Response and manually set the Cookie based on better-auth defaults
+        // 5. Build Response and set cookies exactly as Better Auth expects
         const res = NextResponse.json({ success: true, user });
-
         const cookieStore = await cookies();
+
+        // Standard cookie
         cookieStore.set('better-auth.session_token', sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            path: '/'
+            path: '/',
+            expires: expiresAt
         });
+
+        // Production secure prefix cookie (CRITICAL for many hosting environments)
+        if (process.env.NODE_ENV === 'production') {
+            cookieStore.set('__Secure-better-auth.session_token', sessionToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'lax',
+                path: '/',
+                expires: expiresAt
+            });
+        }
 
         return res;
 

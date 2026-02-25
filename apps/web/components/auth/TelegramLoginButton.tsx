@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { LogIn } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface TelegramUser {
     id: number;
@@ -34,8 +34,9 @@ export function TelegramLoginButton({
 }: TelegramLoginButtonProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const { loginWithPhone } = useAuth(); // We'll adapt our backend to accept Telegram payload
     const router = useRouter();
+    const pathname = usePathname();
+    const currentLocale = pathname.split('/')[1] || 'en';
 
     useEffect(() => {
         // Expose a global callback function for the Telegram widget to call
@@ -53,10 +54,10 @@ export function TelegramLoginButton({
                     });
 
                     if (res.ok) {
+                        // Crucial: Clear all local caches and refresh 
                         router.refresh();
-                        // Redirect logic depending on role, we can just push to home for now 
-                        // as the Navbar will instantly update due to the refreshing!
-                        window.location.href = '/en/portal/dashboard'; // Default locale redirect
+                        // Redirect to the portal dashboard with the correct locale
+                        window.location.href = `/${currentLocale}/portal/dashboard`;
                     } else {
                         console.error('Failed to authenticate via Telegram');
                     }

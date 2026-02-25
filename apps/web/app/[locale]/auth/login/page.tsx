@@ -123,6 +123,13 @@ export default function LoginPage() {
                                 {/* Social Login Buttons */}
                                 <div className="space-y-3 mb-6">
                                     <button
+                                        onClick={() => { setMode('telegram'); setError(''); }}
+                                        className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-lg font-bold transition-all hover:scale-[1.02] shadow-lg active:scale-95" style={{ background: '#0088CC', color: 'white', border: '1px solid #00adef' }}>
+                                        <MessageCircle className="w-6 h-6" fill="currentColor" />
+                                        Continue with Telegram (Free)
+                                    </button>
+
+                                    <button
                                         onClick={handleGoogleLogin}
                                         disabled={googleLoading}
                                         className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-semibold transition-all"
@@ -152,13 +159,6 @@ export default function LoginPage() {
                                     >
                                         <Phone className="w-4.5 h-4.5" />
                                         Continue with Phone Number
-                                    </button>
-
-                                    <button
-                                        onClick={() => { setMode('telegram'); setError(''); }}
-                                        className="w-full flex items-center justify-center gap-3 py-3 rounded-xl text-sm font-semibold transition-all hover:bg-[#2CA5E0] hover:text-white" style={{ background: '#0088CC', color: 'white', border: '1px solid #00adef' }}>
-                                        <MessageCircle className="w-4.5 h-4.5" fill="currentColor" />
-                                        Continue with Telegram (Free)
                                     </button>
                                 </div>
 

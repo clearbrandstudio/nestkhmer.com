@@ -1,6 +1,8 @@
 import ListingsClient from './ListingsClient';
 
-export default async function ListingsPage({ params: { locale } }: { params: { locale: string } }) {
+export default async function ListingsPage(props: { params: Promise<{ locale: string }> }) {
+    const params = await props.params;
+    const { locale } = params;
     // Fetch live data securely on the server
     const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/listings`, {
         headers: {

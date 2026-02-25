@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { db } from '../db';
 import * as schema from '../db/schema';
+import { phoneNumber } from 'better-auth/plugins';
 
 export const auth = betterAuth({
     secret: process.env.BETTER_AUTH_SECRET || 'super-secret-development-string-for-nestkhmer',
@@ -42,4 +43,24 @@ export const auth = betterAuth({
             },
         },
     },
+    plugins: [
+        phoneNumber({
+            sendOTP: async ({ phoneNumber, code }: { phoneNumber: string, code: string }) => {
+                console.log(`[NestKhmer Auth] Sending OTP ${code} to ${phoneNumber}`);
+            }
+        })
+    ],
+    databaseHooks: {
+        user: {
+            create: {
+                after: async (user) => {
+                    if (user.role === 'agent') {
+                        await db.insert(schema.agents).values({
+                            userId: user.id,
+                        });
+                    }
+                }
+            }
+        }
+    }
 });

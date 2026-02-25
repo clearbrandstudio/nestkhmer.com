@@ -1,0 +1,17 @@
+
+> @nestkhmer/web@0.1.0 start
+> next start
+
+   ▲ Next.js 15.5.12
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.253:3000
+
+ ✓ Starting...
+ ✓ Ready in 319ms
+[2m2026-02-24T05:07:02.489Z[0m [33mWARN[0m [1m[Better Auth]:[0m Social provider google is missing clientId or clientSecret
+[2m2026-02-24T05:07:19.644Z[0m [31mERROR[0m [1m[Better Auth]:[0m AggregateError [AggregateError: ] { code: 'ECONNREFUSED' }
+# SERVER_ERROR:  [AggregateError: ] { code: 'ECONNREFUSED' }
+[2m2026-02-24T05:24:36.679Z[0m [31mERROR[0m [1m[Better Auth]:[0m AggregateError [AggregateError: ] { code: 'ECONNREFUSED' }
+# SERVER_ERROR:  [AggregateError: ] { code: 'ECONNREFUSED' }
+[2m2026-02-24T05:26:11.587Z[0m [31mERROR[0m [1m[Better Auth]:[0m AggregateError [AggregateError: ] { code: 'ECONNREFUSED' }
+# SERVER_ERROR:  [AggregateError: ] { code: 'ECONNREFUSED' }

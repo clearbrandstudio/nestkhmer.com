@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import { useSession, signIn, signUp, signOut as betterSignOut } from './auth-client';
+import { useSession, signIn, signUp, signOut as betterSignOut, authClient } from './auth-client';
 import { useRouter } from 'next/navigation';
 
 export type UserRole = 'tenant' | 'agent' | 'admin';
@@ -84,28 +84,36 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
     };
 
     const loginWithPhone = async (phone: string): Promise<{ success: boolean; requiresOtp: boolean }> => {
-        // Phone Auth not supported out-of-the-box by basic better-auth email plugin without OTP plugin
-        // Leaving as mock for now or implement OTP plugin later
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        console.log(`[NestKhmer Auth] OTP sent to ${phone} — mock code: 123456`);
-        return { success: true, requiresOtp: true };
+        try {
+            const { data, error } = await authClient.phoneNumber.sendOtp({
+                phoneNumber: phone
+            });
+            if (error) {
+                console.error("Phone login failed:", error);
+                return { success: false, requiresOtp: false };
+            }
+            return { success: true, requiresOtp: true };
+        } catch (err) {
+            console.error(err);
+            return { success: false, requiresOtp: false };
+        }
     };
 
     const verifyOtp = async (phone: string, otp: string): Promise<boolean> => {
-        // Mock fallback
-        await new Promise(resolve => setTimeout(resolve, 800));
-        if (otp === '123456') {
-            setUser({
-                id: 'phone_' + Date.now().toString(),
-                email: '',
-                name: phone,
-                role: 'tenant',
-                phone,
-                provider: 'phone',
+        try {
+            const { data, error } = await authClient.phoneNumber.verify({
+                phoneNumber: phone,
+                code: otp
             });
+            if (error) {
+                console.error("OTP verification failed:", error);
+                return false;
+            }
             return true;
+        } catch (err) {
+            console.error(err);
+            return false;
         }
-        return false;
     };
 
     const register = async (name: string, email: string, password: string, role: UserRole): Promise<boolean> => {

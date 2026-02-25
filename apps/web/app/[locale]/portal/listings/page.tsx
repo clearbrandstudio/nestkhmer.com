@@ -1,7 +1,7 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Plus, Filter, MoreVertical, Edit2, Eye, Trash2, Home, MapPin, Building, Calendar, DollarSign, X, ArrowRight, Image, CheckCircle, UploadCloud, AlertCircle, RefreshCw, Dog, Wifi, Wind, Car, Droplet, Zap, Tv, Shield, Facebook, Download, LocateFixed, EyeOff, Navigation, Lock, ChevronDown } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLocale } from 'next-intl';
 
 const initialListings = [
@@ -74,7 +74,61 @@ function DragDropUploader() {
 export default function PortalListings() {
     const locale = useLocale();
     const [actionModal, setActionModal] = useState<{ type: 'edit' | 'delete' | 'renew', id?: string } | null>(null);
-    const [allListings, setAllListings] = useState(initialListings);
+    const [allListings, setAllListings] = useState<any[]>(initialListings);
+
+    const fetchListings = async () => {
+        try {
+            const res = await fetch('/api/listings');
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.length > 0) {
+                    setAllListings(data);
+                }
+            }
+        } catch (err) {
+            console.error('Failed to fetch listings', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchListings();
+    }, []);
+
+    const handleSave = async (status: 'draft' | 'active') => {
+        // Simple DOM extraction for demo
+        const titleEn = (document.querySelector('input[placeholder*="Mekong View"]') as HTMLInputElement)?.value || 'Untitled Property';
+        const priceUsd = (document.querySelector('input[placeholder="0.00"]') as HTMLInputElement)?.value || 0;
+        const descriptionEn = (document.querySelector('textarea[placeholder*="Highlight"]') as HTMLTextAreaElement)?.value || '';
+        const propertyType = (document.querySelectorAll('select')[1] as HTMLSelectElement)?.value || 'Apartment';
+        const district = (document.querySelectorAll('select')[2] as HTMLSelectElement)?.value || 'BKK1';
+
+        const data = {
+            titleEn,
+            status,
+            priceUsd,
+            descriptionEn,
+            propertyType,
+            district,
+            images: ['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80']
+        };
+
+        try {
+            const res = await fetch('/api/listings', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (res.ok) {
+                showToast(`Listing successfully ${status === 'draft' ? 'saved as Draft' : 'published to NestKhmer'}!`);
+                setActionModal(null);
+                fetchListings();
+            } else {
+                showToast('Failed to save listing');
+            }
+        } catch (err) {
+            showToast('Error saving listing');
+        }
+    };
 
     // Add state for complex form interactions
     const [amenities, setAmenities] = useState<Record<string, boolean>>({
@@ -381,7 +435,7 @@ export default function PortalListings() {
                                     <div className="px-8 py-5 bg-[var(--color-surface-50)] flex items-center justify-between shadow-inner z-10 border-t border-surface-200">
                                         <div className="flex items-center gap-3">
                                             <button onClick={() => setActionModal(null)} className="px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-white transition-colors" style={{ color: 'var(--color-surface-700)', border: '1px solid var(--color-surface-200)' }}>Cancel</button>
-                                            <button onClick={() => { showToast('Listing successfully updated & saved as Draft.'); setActionModal(null); }} className="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[var(--color-surface-200)] transition-colors" style={{ color: 'var(--color-surface-800)', background: 'var(--color-surface-100)' }}>Save Draft</button>
+                                            <button onClick={() => handleSave('draft')} className="px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[var(--color-surface-200)] transition-colors" style={{ color: 'var(--color-surface-800)', background: 'var(--color-surface-100)' }}>Save Draft</button>
                                         </div>
                                         <div className="flex gap-3">
                                             <button
@@ -392,7 +446,7 @@ export default function PortalListings() {
                                             >
                                                 <Facebook className="w-5 h-5" fill="currentColor" stroke="none" /> Export to Marketplace
                                             </button>
-                                            <button onClick={() => { showToast('Listing successfully published to NestKhmer!'); window.history.replaceState({}, '', `/${locale}/portal/listings`); setActionModal(null); }} className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-semibold transition-transform hover:scale-105 active:scale-95 text-white shadow-lg" style={{ background: 'var(--color-brand-600)' }}>
+                                            <button onClick={() => handleSave('active')} className="flex items-center gap-2 px-8 py-2.5 rounded-xl text-sm font-semibold transition-transform hover:scale-105 active:scale-95 text-white shadow-lg" style={{ background: 'var(--color-brand-600)' }}>
                                                 Publish on NestKhmer <ArrowRight className="w-4 h-4" />
                                             </button>
                                         </div>

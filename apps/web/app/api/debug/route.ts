@@ -14,6 +14,18 @@ export async function GET() {
         }
 
         const tables = await db.execute(sql`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';`);
+
+        let usersData = [];
+        let sessionsData = [];
+        try {
+            const u = await db.execute(sql`SELECT * FROM users ORDER BY created_at DESC LIMIT 5;`);
+            usersData = u as any;
+            const s = await db.execute(sql`SELECT * FROM session ORDER BY created_at DESC LIMIT 5;`);
+            sessionsData = s as any;
+        } catch (dataError: any) {
+            console.error("Failed to fetch data:", dataError);
+        }
+
         return NextResponse.json({
             success: true,
             message: "Database connection established successfully.",
@@ -22,7 +34,9 @@ export async function GET() {
                 betterAuthUrl: process.env.BETTER_AUTH_URL || 'missing',
                 nextPublicSiteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'missing'
             },
-            tables
+            tables,
+            users: usersData,
+            sessions: sessionsData
         });
     } catch (e: any) {
         return NextResponse.json({

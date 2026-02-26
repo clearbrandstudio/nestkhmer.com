@@ -47,8 +47,10 @@ export default function RegisterPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        const success = await register(name, email, password, role);
+        setError('');
+        const { success, error: regError } = await register(name, email, password, role);
         if (success) redirectAfterRegister();
+        else setError(regError || 'Registration failed. Please try again.');
         setLoading(false);
     };
 
@@ -56,8 +58,7 @@ export default function RegisterPage() {
         setGoogleLoading(true);
         setError('');
         const success = await loginWithGoogle();
-        if (success) redirectAfterRegister('tenant');
-        else setError('Google signup failed. Please try again.');
+        if (!success) setError('Google signup failed. Please try again.');
         setGoogleLoading(false);
     };
 

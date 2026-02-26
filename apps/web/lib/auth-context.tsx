@@ -20,11 +20,11 @@ export interface User {
 interface AuthContextType {
     user: User | null;
     isLoading: boolean;
-    login: (email: string, password: string) => Promise<boolean>;
+    login: (email: string, password: string) => Promise<{ success: boolean; user?: any; error?: string }>;
     loginWithGoogle: () => Promise<boolean>;
     loginWithPhone: (phone: string) => Promise<{ success: boolean; requiresOtp: boolean }>;
     verifyOtp: (phone: string, otp: string) => Promise<boolean>;
-    register: (name: string, email: string, password: string, role: UserRole) => Promise<boolean>;
+    register: (name: string, email: string, password: string, role: UserRole) => Promise<{ success: boolean; user?: any; error?: string }>;
     logout: () => void;
 }
 
@@ -49,7 +49,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
         }
     }, [sessionData]);
 
-    const login = async (email: string, password: string): Promise<boolean> => {
+    const login = async (email: string, password: string): Promise<{ success: boolean; user?: any; error?: string }> => {
         try {
             const { data, error } = await signIn.email({
                 email,
@@ -57,13 +57,13 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
             });
             if (error) {
                 console.error("Login failed:", error);
-                return false;
+                return { success: false, error: error.message || "Invalid credentials." };
             }
             router.refresh();
-            return true;
-        } catch (err) {
+            return { success: true, user: data?.user };
+        } catch (err: any) {
             console.error(err);
-            return false;
+            return { success: false, error: err?.message || "An unexpected error occurred." };
         }
     };
 
@@ -120,7 +120,7 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
         }
     };
 
-    const register = async (name: string, email: string, password: string, role: UserRole): Promise<boolean> => {
+    const register = async (name: string, email: string, password: string, role: UserRole): Promise<{ success: boolean; user?: any; error?: string }> => {
         try {
             const { data, error } = await signUp.email({
                 email,
@@ -130,13 +130,13 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
             } as any);
             if (error) {
                 console.error("Registration failed:", error);
-                return false;
+                return { success: false, error: error.message || "Failed to create account." };
             }
             router.refresh();
-            return true;
-        } catch (err) {
+            return { success: true, user: data?.user };
+        } catch (err: any) {
             console.error(err);
-            return false;
+            return { success: false, error: err?.message || "An unexpected error occurred." };
         }
     };
 

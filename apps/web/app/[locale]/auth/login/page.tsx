@@ -37,13 +37,13 @@ export default function LoginPage() {
     const [otpCode, setOtpCode] = useState('');
     const [googleLoading, setGoogleLoading] = useState(false);
 
-    const redirectAfterLogin = () => {
-        const stored = localStorage.getItem('nestkhmer_user');
-        if (stored) {
-            const user = JSON.parse(stored);
+    const redirectAfterLogin = (user: any) => {
+        if (user) {
             if (user.role === 'admin') router.push(`/${locale}/admin/dashboard`);
             else if (user.role === 'agent') router.push(`/${locale}/portal/dashboard`);
             else router.push(`/${locale}`);
+        } else {
+            router.push(`/${locale}`);
         }
     };
 
@@ -51,9 +51,9 @@ export default function LoginPage() {
         e.preventDefault();
         setError('');
         setLoading(true);
-        const success = await login(email, password);
-        if (success) redirectAfterLogin();
-        else setError('Invalid email or password. Try the demo accounts below.');
+        const { success, user, error: loginError } = await login(email, password);
+        if (success) redirectAfterLogin(user);
+        else setError(loginError || 'Invalid email or password.');
         setLoading(false);
     };
 
@@ -61,8 +61,8 @@ export default function LoginPage() {
         setGoogleLoading(true);
         setError('');
         const success = await loginWithGoogle();
-        if (success) redirectAfterLogin();
-        else setError('Google login failed. Please try again.');
+        // Note: Google login redirects the user away from the app to Google's consent screen.
+        if (!success) setError('Google login failed. Please try again.');
         setGoogleLoading(false);
     };
 
@@ -85,7 +85,7 @@ export default function LoginPage() {
         setError('');
         setLoading(true);
         const success = await verifyOtp(phoneNumber, otpCode);
-        if (success) redirectAfterLogin();
+        if (success) redirectAfterLogin(null); // Assuming tenant or default for OTP users right now
         else setError('Invalid code. Demo code is 123456.');
         setLoading(false);
     };
@@ -95,8 +95,8 @@ export default function LoginPage() {
         setPassword(password);
         setError('');
         setLoading(true);
-        const success = await login(email, password);
-        if (success) redirectAfterLogin();
+        const { success, user } = await login(email, password);
+        if (success) redirectAfterLogin(user);
         setLoading(false);
     };
 

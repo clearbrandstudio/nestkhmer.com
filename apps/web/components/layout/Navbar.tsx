@@ -159,7 +159,12 @@ export function Navbar() {
                                             {user.name?.charAt(0).toUpperCase() || 'U'}
                                         </div>
                                     )}
-                                    <span className="hidden sm:block text-sm font-medium max-w-[100px] truncate" style={{ color: 'var(--color-surface-700)' }}>{user.name}</span>
+                                    <div className="hidden sm:flex flex-col items-start leading-tight pl-1">
+                                        <span className="text-sm font-medium max-w-[100px] truncate" style={{ color: 'var(--color-surface-700)' }}>{user.name}</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: user.role === 'agent' ? 'var(--color-brand-600)' : 'var(--color-fresh-600)' }}>
+                                            {user.role === 'tenant' ? 'Tenant Profile' : user.role === 'agent' ? 'Agent Profile' : user.role}
+                                        </span>
+                                    </div>
                                 </button>
                                 <AnimatePresence>
                                     {profileOpen && (
@@ -172,7 +177,12 @@ export function Navbar() {
                                             style={{ minWidth: '200px' }}
                                         >
                                             <div className="px-4 py-2 border-b border-surface-100 mb-1">
-                                                <p className="text-sm font-bold truncate" style={{ color: 'var(--color-surface-900)' }}>{user.name}</p>
+                                                <div className="flex items-center gap-2 mb-0.5">
+                                                    <p className="text-sm font-bold truncate" style={{ color: 'var(--color-surface-900)' }}>{user.name}</p>
+                                                    <span className="text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase" style={{ background: user.role === 'agent' ? 'var(--color-brand-50)' : 'var(--color-fresh-50)', color: user.role === 'agent' ? 'var(--color-brand-700)' : 'var(--color-fresh-700)' }}>
+                                                        {user.role}
+                                                    </span>
+                                                </div>
                                                 <p className="text-xs truncate" style={{ color: 'var(--color-surface-500)' }}>{user.email}</p>
                                             </div>
                                             <a

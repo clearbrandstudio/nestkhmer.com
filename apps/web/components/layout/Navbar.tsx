@@ -11,7 +11,8 @@ import {
     Globe,
     Home,
     LogOut,
-    LayoutDashboard
+    LayoutDashboard,
+    User
 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 
@@ -185,13 +186,23 @@ export function Navbar() {
                                                 </div>
                                                 <p className="text-xs truncate" style={{ color: 'var(--color-surface-500)' }}>{user.email}</p>
                                             </div>
-                                            <a
-                                                href={`/${currentLocale}/portal/dashboard`}
-                                                className="w-full px-4 py-2.5 text-left text-sm font-medium transition-colors flex items-center gap-2 no-underline hover:bg-surface-50"
-                                                style={{ color: 'var(--color-surface-700)' }}
-                                            >
-                                                <LayoutDashboard className="w-4 h-4" /> Dashboard
-                                            </a>
+                                            {user.role === 'agent' || user.role === 'admin' ? (
+                                                <a
+                                                    href={`/${currentLocale}/portal/dashboard`}
+                                                    className="w-full px-4 py-2.5 text-left text-sm font-medium transition-colors flex items-center gap-2 no-underline hover:bg-surface-50"
+                                                    style={{ color: 'var(--color-surface-700)' }}
+                                                >
+                                                    <LayoutDashboard className="w-4 h-4" /> Dashboard
+                                                </a>
+                                            ) : (
+                                                <a
+                                                    href={`/${currentLocale}/profile`}
+                                                    className="w-full px-4 py-2.5 text-left text-sm font-medium transition-colors flex items-center gap-2 no-underline hover:bg-surface-50"
+                                                    style={{ color: 'var(--color-surface-700)' }}
+                                                >
+                                                    <User className="w-4 h-4" /> My Profile
+                                                </a>
+                                            )}
                                             <button
                                                 onClick={() => { setProfileOpen(false); logout(); }}
                                                 className="w-full px-4 py-2.5 text-left text-sm font-medium transition-colors flex items-center gap-2 text-rose-600 hover:bg-rose-50"
@@ -272,9 +283,15 @@ export function Navbar() {
                                 ))}
                                 {!isLoading && user ? (
                                     <>
-                                        <a href={`/${currentLocale}/portal/dashboard`} className="px-4 py-3 rounded-lg text-sm font-medium no-underline flex items-center gap-2" style={{ color: 'var(--color-surface-700)' }}>
-                                            <LayoutDashboard className="w-4 h-4" /> Dashboard
-                                        </a>
+                                        {user.role === 'agent' || user.role === 'admin' ? (
+                                            <a href={`/${currentLocale}/portal/dashboard`} className="px-4 py-3 rounded-lg text-sm font-medium no-underline flex items-center gap-2" style={{ color: 'var(--color-surface-700)' }}>
+                                                <LayoutDashboard className="w-4 h-4" /> Dashboard
+                                            </a>
+                                        ) : (
+                                            <a href={`/${currentLocale}/profile`} className="px-4 py-3 rounded-lg text-sm font-medium no-underline flex items-center gap-2" style={{ color: 'var(--color-surface-700)' }}>
+                                                <User className="w-4 h-4" /> My Profile
+                                            </a>
+                                        )}
                                         <button onClick={() => logout()} className="px-4 py-3 text-left rounded-lg text-sm font-medium flex items-center gap-2" style={{ color: 'var(--color-rose-600)' }}>
                                             <LogOut className="w-4 h-4" /> Sign Out
                                         </button>

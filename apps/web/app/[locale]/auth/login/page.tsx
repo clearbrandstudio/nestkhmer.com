@@ -41,7 +41,7 @@ export default function LoginPage() {
         if (user) {
             if (user.role === 'admin') router.push(`/${locale}/admin/dashboard`);
             else if (user.role === 'agent') router.push(`/${locale}/portal/dashboard`);
-            else router.push(`/${locale}`);
+            else router.push(`/${locale}/profile`);
         } else {
             router.push(`/${locale}`);
         }

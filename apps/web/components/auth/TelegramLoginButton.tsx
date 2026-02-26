@@ -54,10 +54,15 @@ export function TelegramLoginButton({
                     });
 
                     if (res.ok) {
+                        const data = await res.json();
                         // Crucial: Clear all local caches and refresh 
                         router.refresh();
-                        // Redirect to the portal dashboard with the correct locale
-                        window.location.href = `/${currentLocale}/portal/dashboard`;
+                        // Redirect based on role
+                        if (data.user?.role === 'agent' || data.user?.role === 'admin') {
+                            window.location.href = `/${currentLocale}/portal/dashboard`;
+                        } else {
+                            window.location.href = `/${currentLocale}/profile`;
+                        }
                     } else {
                         console.error('Failed to authenticate via Telegram');
                     }

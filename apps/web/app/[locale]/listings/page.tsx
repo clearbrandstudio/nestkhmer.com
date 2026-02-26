@@ -3,16 +3,25 @@ import ListingsClient from './ListingsClient';
 export default async function ListingsPage(props: { params: Promise<{ locale: string }> }) {
     const params = await props.params;
     const { locale } = params;
-    // Fetch live data securely on the server
-    const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/listings`, {
-        headers: {
-            Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}`
-        },
-        cache: 'no-store' // Ensure we get fresh data immediately while dev
-    });
+    let strapiListings = [];
+    try {
+        // Fetch live data securely on the server
+        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/listings`, {
+            headers: {
+                Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}`
+            },
+            cache: 'no-store' // Ensure we get fresh data immediately while dev
+        });
 
-    const json = await res.json();
-    const strapiListings = json?.data || [];
+        if (res.ok) {
+            const json = await res.json();
+            strapiListings = json?.data || [];
+        } else {
+            console.error(`Strapi responded with status: ${res.status}`);
+        }
+    } catch (error) {
+        console.error("Failed to fetch listings from Strapi. Check server availability.", error);
+    }
 
     // Map Strapi's real fields and fallback to mock data for layout purposes 
     // until you finish building the schema in the Content Manager

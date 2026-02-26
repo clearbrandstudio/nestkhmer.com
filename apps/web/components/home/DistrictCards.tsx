@@ -236,8 +236,9 @@ function DistrictCard({ district }: { district: DistrictData }) {
     );
 }
 
-export function DistrictCards() {
+export function DistrictCards({ strapiData }: { strapiData?: any[] }) {
     const t = useTranslations('districts');
+    const districtsToDisplay = strapiData && strapiData.length > 0 ? strapiData : districts;
 
     return (
         <section className="py-14 md:py-20">
@@ -263,7 +264,7 @@ export function DistrictCards() {
 
                 {/* Masonry Grid */}
                 <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
-                    {districts.map((district, i) => (
+                    {districtsToDisplay.map((district, i) => (
                         <motion.div
                             key={district.slug}
                             initial={{ opacity: 0, y: 40 }}

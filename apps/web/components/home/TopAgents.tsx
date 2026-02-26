@@ -203,8 +203,9 @@ function AgentCard({ agent, index }: { agent: AgentData; index: number }) {
     );
 }
 
-export function TopAgents() {
+export function TopAgents({ strapiData }: { strapiData?: any[] }) {
     const t = useTranslations('agents');
+    const agentsToDisplay = strapiData && strapiData.length > 0 ? strapiData : mockAgents;
 
     return (
         <section
@@ -242,7 +243,7 @@ export function TopAgents() {
 
                 {/* Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {mockAgents.map((agent, i) => (
+                    {agentsToDisplay.map((agent, i) => (
                         <AgentCard key={agent.name} agent={agent} index={i} />
                     ))}
                 </div>

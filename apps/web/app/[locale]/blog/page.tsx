@@ -15,9 +15,41 @@ const posts = [
 
 const categories = ['All', 'Market Reports', 'Guides', 'Platform', 'Neighbourhood'];
 
-export default function BlogPage() {
-    const pathname = usePathname();
-    const locale = pathname.split('/')[1] || 'en';
+async function fetchFromStrapi(endpoint: string) {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_URL}/api/${endpoint}`, {
+            headers: { Authorization: `Bearer ${process.env.STRAPI_API_TOKEN}` },
+            cache: 'no-store'
+        });
+        if (res.ok) {
+            const json = await res.json();
+            return json?.data || [];
+        }
+    } catch (e) {
+        console.error(`Failed to fetch ${endpoint} from Strapi`, e);
+    }
+    return [];
+}
+
+export default async function BlogPage(props: { params: Promise<{ locale: string }> }) {
+    const params = await props.params;
+    const { locale } = params;
+
+    const strapiBlogsRaw = await fetchFromStrapi('blogs');
+
+    // Map Strapi's fields and fallback to mock data
+    const strapiPosts = strapiBlogsRaw.map((doc: any) => ({
+        title: doc.titleEn || 'Untitled Post',
+        excerpt: doc.excerptEn || '',
+        image: doc.image || 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=800&h=400&fit=crop',
+        category: doc.category || 'Platform',
+        date: doc.publishedAt ? new Date(doc.publishedAt).toLocaleDateString() : new Date().toLocaleDateString(),
+        readTime: doc.readTime || '5 min',
+        slug: doc.documentId || doc.id || 'untitled',
+    }));
+
+    const postsToDisplay = strapiPosts.length > 0 ? strapiPosts : posts;
+
     return (
         <div className="min-h-screen pb-32" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
             <div className="section-container pt-8 pb-32">
@@ -33,23 +65,23 @@ export default function BlogPage() {
                 </div>
 
                 {/* Featured Post */}
-                <motion.a href={`/${locale}/blog/${posts[0].slug}`} className="glass-card overflow-hidden no-underline grid grid-cols-1 md:grid-cols-2 gap-0 mb-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4 }}>
-                    <div className="h-64 md:h-auto bg-cover bg-center" style={{ backgroundImage: `url(${posts[0].image})` }} />
+                <motion.a href={`/${locale}/blog/${postsToDisplay[0].slug}`} className="glass-card overflow-hidden no-underline grid grid-cols-1 md:grid-cols-2 gap-0 mb-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} whileHover={{ y: -4 }}>
+                    <div className="h-64 md:h-auto bg-cover bg-center" style={{ backgroundImage: `url(${postsToDisplay[0].image})` }} />
                     <div className="p-8 flex flex-col justify-center">
-                        <span className="text-xs font-semibold px-3 py-1 rounded-full inline-block w-fit mb-3" style={{ background: 'var(--color-brand-50)', color: 'var(--color-brand-600)' }}>{posts[0].category}</span>
-                        <h2 className="text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>{posts[0].title}</h2>
-                        <p className="text-sm mb-4" style={{ color: 'var(--color-surface-500)' }}>{posts[0].excerpt}</p>
+                        <span className="text-xs font-semibold px-3 py-1 rounded-full inline-block w-fit mb-3" style={{ background: 'var(--color-brand-50)', color: 'var(--color-brand-600)' }}>{postsToDisplay[0].category}</span>
+                        <h2 className="text-2xl font-bold mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>{postsToDisplay[0].title}</h2>
+                        <p className="text-sm mb-4" style={{ color: 'var(--color-surface-500)' }}>{postsToDisplay[0].excerpt}</p>
                         <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--color-surface-400)' }}>
-                            <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{posts[0].date}</span>
-                            <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{posts[0].readTime}</span>
+                            <span className="flex items-center gap-1"><Calendar className="w-3 h-3" />{postsToDisplay[0].date}</span>
+                            <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{postsToDisplay[0].readTime}</span>
                         </div>
                     </div>
                 </motion.a>
 
                 {/* Post Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {posts.slice(1).map((p, i) => (
-                        <>
+                    {postsToDisplay.slice(1).map((p: any, i: number) => (
+                        <div key={p.slug}>
                             <motion.a key={p.slug} href={`/${locale}/blog/${p.slug}`} className="glass-card overflow-hidden no-underline group" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} whileHover={{ y: -4 }}>
                                 <div className="h-44 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style={{ backgroundImage: `url(${p.image})` }} />
                                 <div className="p-5">
@@ -68,7 +100,7 @@ export default function BlogPage() {
                                     <AdSlot zone="blog-inline" />
                                 </motion.div>
                             )}
-                        </>
+                        </div>
                     ))}
                 </div>
             </div>

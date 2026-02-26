@@ -86,8 +86,9 @@ const mockListings = [
     },
 ];
 
-export function FeaturedListings() {
+export function FeaturedListings({ strapiData }: { strapiData?: any[] }) {
     const t = useTranslations('featured');
+    const listingsToDisplay = strapiData && strapiData.length > 0 ? strapiData : mockListings;
 
     return (
         <section className="py-14 md:py-20" style={{ background: 'var(--color-surface-50)' }}>
@@ -116,7 +117,7 @@ export function FeaturedListings() {
 
                 {/* Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {mockListings.map((listing, i) => (
+                    {listingsToDisplay.map((listing, i) => (
                         <motion.div
                             key={listing.title}
                             initial={{ opacity: 0, y: 30 }}

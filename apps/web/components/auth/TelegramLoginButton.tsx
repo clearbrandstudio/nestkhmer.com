@@ -16,7 +16,7 @@ interface TelegramUser {
 }
 
 interface TelegramLoginButtonProps {
-    botName: string; // The username of your Telegram Bot (without the @)
+    botName?: string; // The username of your Telegram Bot (without the @)
     buttonSize?: 'large' | 'medium' | 'small';
     cornerRadius?: number;
     requestAccess?: boolean;
@@ -76,7 +76,9 @@ export function TelegramLoginButton({
 
         const script = document.createElement('script');
         script.src = 'https://telegram.org/js/telegram-widget.js?22';
-        script.setAttribute('data-telegram-login', botName);
+        if (botName) {
+            script.setAttribute('data-telegram-login', botName);
+        }
         script.setAttribute('data-size', buttonSize);
         if (cornerRadius !== undefined) {
             script.setAttribute('data-radius', cornerRadius.toString());
@@ -99,6 +101,17 @@ export function TelegramLoginButton({
             }
         };
     }, [botName, buttonSize, cornerRadius, requestAccess, usePic, router]);
+
+    if (!botName) {
+        return (
+            <div className={`flex flex-col items-center justify-center min-h-[48px] p-4 text-center ${className}`}>
+                <div className="text-amber-600 font-medium text-sm mb-1">Telegram Bot Not Configured</div>
+                <div className="text-xs text-amber-700 max-w-[250px]">
+                    Please set <code className="bg-amber-100 px-1 rounded">NEXT_PUBLIC_TELEGRAM_BOT_NAME</code> in your environment variables.
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={`flex flex-col items-center justify-center min-h-[48px] ${className}`}>

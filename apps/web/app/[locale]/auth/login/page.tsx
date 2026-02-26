@@ -305,7 +305,7 @@ export default function LoginPage() {
                                         No passwords or SMS codes required! Use your existing Telegram account to sign in securely.
                                     </p>
                                     <div className="bg-[#f0f9ff] py-6 px-4 rounded-xl border border-[#bae6fd]">
-                                        <TelegramLoginButton botName={process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || 'NestKhmerBot'} />
+                                        <TelegramLoginButton botName={process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME} />
                                     </div>
                                     <p className="text-xs mt-6 px-6" style={{ color: 'var(--color-surface-400)' }}>
                                         By signing in via Telegram, you agree to NestKhmer's Terms & Conditions and acknowledge our Privacy Policy.

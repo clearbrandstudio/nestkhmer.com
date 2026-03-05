@@ -3,13 +3,17 @@ import { FeaturedListings } from '@/components/home/FeaturedListings';
 import { DistrictCards } from '@/components/home/DistrictCards';
 import { TopAgents } from '@/components/home/TopAgents';
 import { WhyNestKhmer } from '@/components/home/WhyNestKhmer';
-import { StatsBanner } from '@/components/home/StatsBanner';
 import { RecentlyRented } from '@/components/home/RecentlyRented';
 import { TopDeals } from '@/components/home/TopDeals';
 import { AdSlot } from '@/components/ads/AdSlot';
 
 import { db, schema } from '@nestkhmer/shared';
-import { desc, eq } from 'drizzle-orm';
+import { desc, eq, sql } from 'drizzle-orm';
+import { Suspense } from 'react';
+
+// Force dynamic to ensure fresh data and environment variables
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function HomePage() {
     let dbListings: any[] = [];

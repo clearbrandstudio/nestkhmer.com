@@ -10,7 +10,7 @@
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
-        "@nestkhmer/shared": "workspace:*",
+        "@nestkhmer/shared": "0.1.0",
         "@tanstack/react-query": "^5.62.0",
         "better-auth": "^1.4.19",
         "drizzle-orm": "^0.39.5",

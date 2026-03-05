@@ -71,7 +71,10 @@ export function AuthProviderComponent({ children }: { children: ReactNode }) {
         try {
             const { data, error } = await signIn.social({
                 provider: "google",
-                callbackURL: window.location.origin
+                // After Google sets the session cookie, land on /profile.
+                // The profile page already redirects agents → /portal/dashboard
+                // and admins → /admin/dashboard, so this works for all roles.
+                callbackURL: `${window.location.origin}/en/profile`
             });
             if (error) {
                 console.error("Google login failed:", error);

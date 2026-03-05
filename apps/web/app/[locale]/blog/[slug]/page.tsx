@@ -1,119 +1,61 @@
-'use client';
-import { motion } from 'framer-motion';
+import { db, schema } from '@nestkhmer/shared';
+import { eq } from 'drizzle-orm';
+import { notFound } from 'next/navigation';
 import { Calendar, Clock, ChevronLeft, Share2 } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { AdSlot } from '@/components/ads/AdSlot';
-import { CustomHtmlBlock } from '@/components/blog/CustomHtmlBlock';
+import { ClientMotionWrapper } from './ClientMotionWrapper';
 
-export default function BlogPostPage() {
-    const pathname = usePathname();
-    const locale = pathname.split('/')[1] || 'en';
-    return (
-        <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
-            <article className="section-container pt-8 pb-32 max-w-3xl mx-auto">
-                <a href={`/${locale}/blog`} className="flex items-center gap-1 text-sm no-underline mb-6" style={{ color: 'var(--color-brand-600)' }}><ChevronLeft className="w-4 h-4" /> Back to Blog</a>
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full inline-block mb-4" style={{ background: 'var(--color-brand-50)', color: 'var(--color-brand-600)' }}>Market Reports</span>
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>BKK1 Rental Market Report Q4 2025</h1>
-                    <div className="flex items-center gap-4 mb-8 text-sm" style={{ color: 'var(--color-surface-400)' }}>
-                        <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />Feb 15, 2026</span>
-                        <span className="flex items-center gap-1"><Clock className="w-4 h-4" />8 min read</span>
-                        <button className="flex items-center gap-1 ml-auto" style={{ color: 'var(--color-surface-400)' }}><Share2 className="w-4 h-4" />Share</button>
-                    </div>
-                    <div className="rounded-2xl overflow-hidden mb-8 h-80 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1200&h=500&fit=crop)' }} />
-                    <div className="prose max-w-none space-y-5 text-sm leading-relaxed" style={{ color: 'var(--color-surface-700)' }}>
-                        <p>The BKK1 rental market continues to evolve as Phnom Penh solidifies its position as Southeast Asia&apos;s most dynamic emerging city. In Q4 2025, we observed several key trends that both tenants and agents should understand.</p>
-                        <h2 className="text-xl font-bold mt-8 mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>Key Findings</h2>
-                        <ul className="space-y-2 list-disc pl-5">
-                            <li>Median rent for a 1-bedroom apartment: <strong>$650/month</strong> (up 5% from Q3)</li>
-                            <li>Average time-to-let decreased to <strong>6 days</strong> (from 8 days in Q3)</li>
-                            <li>New supply of premium units increased by <strong>12%</strong></li>
-                            <li>Expat demand remains strong, with <strong>68%</strong> of leads from international tenants</li>
-                        </ul>
-                        <h2 className="text-xl font-bold mt-8 mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>Price Distribution</h2>
-                        <p>The price distribution in BKK1 shows a healthy spread across segments: budget studios from $350–$500, mid-range 1–2 bedrooms from $500–$1,000, and premium units above $1,000. The luxury segment above $2,000 saw the fastest growth at 15% quarter-over-quarter.</p>
+export default async function BlogPostPage(props: { params: Promise<{ locale: string; slug: string }> }) {
+  const params = await props.params;
+  const { locale, slug } = params;
 
-                        {/* Custom HTML Block Demo — Interactive Price Chart */}
-                        <CustomHtmlBlock
-                            title="BKK1 Price Distribution — Interactive Chart"
-                            minHeight={320}
-                            html={`
-<style>
-  body { font-family: -apple-system, sans-serif; background: #fafafa; padding: 32px; }
-  .chart { display: flex; align-items: flex-end; gap: 12px; height: 220px; padding-top: 24px; }
-  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .bar { width: 100%; border-radius: 8px 8px 0 0; transition: all 0.3s; cursor: pointer; position: relative; }
-  .bar:hover { filter: brightness(1.1); transform: scaleY(1.05); transform-origin: bottom; }
-  .bar .tooltip { display: none; position: absolute; top: -36px; left: 50%; transform: translateX(-50%); 
-    background: #1a1a2e; color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; white-space: nowrap; }
-  .bar:hover .tooltip { display: block; }
-  .label { font-size: 11px; color: #666; text-align: center; font-weight: 500; }
-  .value { font-size: 12px; font-weight: 700; color: #333; }
-  h3 { font-size: 16px; font-weight: 700; margin-bottom: 24px; color: #1a1a2e; }
-  .legend { display: flex; gap: 16px; margin-top: 16px; justify-content: center; }
-  .legend span { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #666; }
-  .legend .dot { width: 10px; height: 10px; border-radius: 50%; }
-</style>
-<h3>📊 BKK1 Rental Price Segments (Q4 2025)</h3>
-<div class="chart">
-  <div class="bar-wrap">
-    <div class="value">22%</div>
-    <div class="bar" style="height: 22%; background: linear-gradient(180deg, #a78bfa, #7c3aed);">
-      <div class="tooltip">Studios: $350–$500</div>
-    </div>
-    <div class="label">Budget<br/>Studios</div>
-  </div>
-  <div class="bar-wrap">
-    <div class="value">38%</div>
-    <div class="bar" style="height: 38%; background: linear-gradient(180deg, #818cf8, #4f46e5);">
-      <div class="tooltip">Mid-range: $500–$1,000</div>
-    </div>
-    <div class="label">Mid-Range<br/>1-2 Bed</div>
-  </div>
-  <div class="bar-wrap">
-    <div class="value">25%</div>
-    <div class="bar" style="height: 25%; background: linear-gradient(180deg, #34d399, #059669);">
-      <div class="tooltip">Premium: $1,000–$2,000</div>
-    </div>
-    <div class="label">Premium<br/>Units</div>
-  </div>
-  <div class="bar-wrap">
-    <div class="value">15%</div>
-    <div class="bar" style="height: 15%; background: linear-gradient(180deg, #fbbf24, #d97706);">
-      <div class="tooltip">Luxury: $2,000+ (fastest growth!)</div>
-    </div>
-    <div class="label">Luxury<br/>$2K+</div>
-  </div>
-</div>
-<div class="legend">
-  <span><div class="dot" style="background:#7c3aed"></div> Budget</span>
-  <span><div class="dot" style="background:#4f46e5"></div> Mid-Range</span>
-  <span><div class="dot" style="background:#059669"></div> Premium</span>
-  <span><div class="dot" style="background:#d97706"></div> Luxury (+15% QoQ)</span>
-</div>
-<script>
-  document.querySelectorAll('.bar').forEach(bar => {
-    bar.addEventListener('click', () => {
-      bar.style.boxShadow = bar.style.boxShadow ? '' : '0 0 20px rgba(139,92,246,0.4)';
-    });
-  });
-</script>`}
-                        />
-                        <h2 className="text-xl font-bold mt-8 mb-3" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>Outlook for 2026</h2>
-                        <p>We expect continued price appreciation of 3–5% in BKK1 as new supply is absorbed by growing demand. The area&apos;s walkability, restaurant density, and emerging tech hub status continue to attract young professionals and digital nomads.</p>
-                        <div className="glass-card p-6 mt-8" style={{ borderRadius: 'var(--radius-xl)' }}>
-                            <h3 className="text-base font-bold mb-2" style={{ fontFamily: 'var(--font-heading)' }}>Want personalized market insights?</h3>
-                            <p className="text-sm mb-3" style={{ color: 'var(--color-surface-500)' }}>Connect with a verified agent who specializes in BKK1.</p>
-                            <a href={`/${locale}/agents`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold no-underline" style={{ background: 'var(--color-brand-600)', color: 'white', fontFamily: 'var(--font-heading)' }}>Find a BKK1 Agent</a>
-                        </div>
-                    </div>
+  // 1. Fetch post from Drizzle
+  const [p] = await db.select().from(schema.blogPosts)
+    .where(eq(schema.blogPosts.slug, slug))
+    .limit(1);
 
-                    {/* Blog Detail Ad */}
-                    <div className="mt-10">
-                        <AdSlot zone="blog-detail" />
-                    </div>
-                </motion.div>
-            </article>
-        </div>
-    );
+  if (!p) {
+    notFound();
+  }
+
+  // Parse content blocks from JSON stored in contentEn
+  let blocks: any[] = [];
+  try {
+    blocks = JSON.parse(p.contentEn || '[]');
+    if (!Array.isArray(blocks)) {
+      blocks = [{ id: '1', type: 'text', content: p.contentEn }];
+    }
+  } catch (e) {
+    blocks = [{ id: '1', type: 'text', content: p.contentEn }];
+  }
+
+  return (
+    <div className="min-h-screen" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
+      <article className="section-container pt-8 pb-32 max-w-3xl mx-auto">
+        <a href={`/${locale}/blog`} className="flex items-center gap-1 text-sm no-underline mb-6 font-medium" style={{ color: 'var(--color-brand-600)' }}><ChevronLeft className="w-4 h-4" /> Back to Blog</a>
+
+        <ClientMotionWrapper>
+          <span className="text-xs font-semibold px-3 py-1 rounded-full inline-block mb-4" style={{ background: 'var(--color-brand-50)', color: 'var(--color-brand-600)' }}>{p.category || 'Platform'}</span>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4" style={{ fontFamily: 'var(--font-heading)' }}>{p.titleEn}</h1>
+          <div className="flex items-center gap-4 mb-8 text-sm" style={{ color: 'var(--color-surface-400)' }}>
+            <span className="flex items-center gap-1"><Calendar className="w-4 h-4" />{new Date(p.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+            <span className="flex items-center gap-1"><Clock className="w-4 h-4" />5 min read</span>
+            <button className="flex items-center gap-1 ml-auto" style={{ color: 'var(--color-surface-400)' }}><Share2 className="w-4 h-4" />Share</button>
+          </div>
+
+          {p.ogImage && (
+            <div className="rounded-2xl overflow-hidden mb-8 h-80 bg-cover bg-center" style={{ backgroundImage: `url(${p.ogImage})` }} />
+          )}
+
+          <div className="prose max-w-none space-y-6 text-base leading-relaxed" style={{ color: 'var(--color-surface-700)' }}>
+            {blocks.map((block: any) => {
+              if (block.type === 'heading') return <h2 key={block.id} className="text-2xl font-bold mt-8 mb-4" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-surface-900)' }}>{block.content}</h2>;
+              if (block.type === 'text') return <p key={block.id}>{block.content}</p>;
+              if (block.type === 'image') return <img key={block.id} src={block.content} alt="Content image" className="rounded-2xl w-full h-auto mb-6" />;
+              return null;
+            })}
+          </div>
+        </ClientMotionWrapper>
+      </article>
+    </div>
+  );
 }

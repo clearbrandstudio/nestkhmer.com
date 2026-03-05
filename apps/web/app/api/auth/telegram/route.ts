@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { db, schema, auth } from '@nestkhmer/shared';
+import { db, schema } from '@nestkhmer/shared';
 import { eq } from 'drizzle-orm';
-import { cookies } from 'next/headers';
 
 // Securely parse and validate the payload from the Telegram Widget
 function verifyTelegramHash(data: any, botToken: string): boolean {
@@ -89,27 +88,26 @@ export async function POST(req: NextRequest) {
             userAgent: req.headers.get('user-agent') || null,
         });
 
-        // 5. Build Response and set cookies exactly as Better Auth expects
+        // 5. Build Response and set cookies directly on res (cookieStore won't attach headers to an existing NextResponse)
         const res = NextResponse.json({ success: true, user });
-        const cookieStore = await cookies();
 
-        // Standard cookie
-        cookieStore.set('better-auth.session_token', sessionToken, {
+        // Set session cookie directly on the response so Set-Cookie header is included
+        res.cookies.set('better-auth.session_token', sessionToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
             path: '/',
-            expires: expiresAt
+            expires: expiresAt,
         });
 
-        // Production secure prefix cookie (CRITICAL for many hosting environments)
+        // Production secure-prefix cookie (required on many hosting environments)
         if (process.env.NODE_ENV === 'production') {
-            cookieStore.set('__Secure-better-auth.session_token', sessionToken, {
+            res.cookies.set('__Secure-better-auth.session_token', sessionToken, {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'lax',
                 path: '/',
-                expires: expiresAt
+                expires: expiresAt,
             });
         }
 

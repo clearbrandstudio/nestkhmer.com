@@ -12,72 +12,105 @@ import { db, schema } from '@nestkhmer/shared';
 import { desc, eq } from 'drizzle-orm';
 
 export default async function HomePage() {
-    // 1. Fetch live data from Drizzle
-    const [dbListings, dbAgents, dbDistricts] = await Promise.all([
-        db.select().from(schema.listings).orderBy(desc(schema.listings.createdAt)).limit(8),
-        db.select({
-            id: schema.agents.id,
-            agency: schema.agents.agency,
-            photoUrl: schema.agents.photoUrl,
-            nestScore: schema.agents.nestScore,
-            responseRate: schema.agents.responseRate,
-            avgResponseTime: schema.agents.avgResponseTime,
-            name: schema.users.name,
-            avatar: schema.users.avatar,
-            image: schema.users.image,
-        })
-            .from(schema.agents)
-            .innerJoin(schema.users, eq(schema.agents.userId, schema.users.id))
-            .limit(6),
-        db.select().from(schema.districts).limit(6)
-    ]);
+    let dbListings: any[] = [];
+    let dbAgents: any[] = [];
+    let dbDistricts: any[] = [];
+
+    // 1. Fetch live data from Drizzle with error safety
+    try {
+        const results = await Promise.allSettled([
+            db.select().from(schema.listings).orderBy(desc(schema.listings.createdAt)).limit(8),
+            db.select({
+                id: schema.agents.id,
+                agency: schema.agents.agency,
+                photoUrl: schema.agents.photoUrl,
+                nestScore: schema.agents.nestScore,
+                responseRate: schema.agents.responseRate,
+                avgResponseTime: schema.agents.avgResponseTime,
+                name: schema.users.name,
+                avatar: schema.users.avatar,
+                image: schema.users.image,
+            })
+                .from(schema.agents)
+                .innerJoin(schema.users, eq(schema.agents.userId, schema.users.id))
+                .limit(6),
+            db.select().from(schema.districts).limit(6)
+        ]);
+
+        if (results[0].status === 'fulfilled') dbListings = (results[0] as any).value;
+        if (results[1].status === 'fulfilled') dbAgents = (results[1] as any).value;
+        if (results[2].status === 'fulfilled') dbDistricts = (results[2] as any).value;
+    } catch (dbError) {
+        console.error("Homepage data fetch fatal error:", dbError);
+    }
 
     // 2. Map Listings
     const mappedListings = dbListings.map((doc) => {
-        const imageUrl = doc.images?.[0] || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=500&fit=crop';
-        return {
-            image: imageUrl,
-            title: doc.titleEn || 'Untitled Property',
-            district: doc.district || 'Phnom Penh',
-            price: doc.priceUsd || 0,
-            bedrooms: doc.bedrooms || 1,
-            bathrooms: doc.bathrooms || 1,
-            size: doc.sizeSqm || 45,
-            floor: doc.floor || 1,
-            daysOld: Math.ceil(Math.abs(new Date().getTime() - new Date(doc.createdAt).getTime()) / (1000 * 60 * 60 * 24)),
-            agentScore: 92,
-            propertyId: doc.slug,
-        };
-    });
+        try {
+            const imageUrl = (doc.images && Array.isArray(doc.images) && doc.images.length > 0)
+                ? doc.images[0]
+                : 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=500&fit=crop';
+
+            const createdDate = doc.createdAt ? new Date(doc.createdAt) : new Date();
+            const now = new Date();
+            const diffTime = Math.abs(now.getTime() - createdDate.getTime());
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            return {
+                image: imageUrl,
+                title: doc.titleEn || 'Untitled Property',
+                district: doc.district || 'Phnom Penh',
+                price: doc.priceUsd || 0,
+                bedrooms: doc.bedrooms || 1,
+                bathrooms: doc.bathrooms || 1,
+                size: doc.sizeSqm || 45,
+                floor: doc.floor || 1,
+                daysOld: isNaN(diffDays) ? 1 : diffDays,
+                agentScore: 92,
+                propertyId: doc.slug,
+            };
+        } catch (e) {
+            console.error("Mapping listing error:", e);
+            return null;
+        }
+    }).filter(Boolean);
 
     // 3. Map Agents
     const mappedAgents = dbAgents.map((doc) => {
-        const avatarUrl = doc.photoUrl || doc.avatar || doc.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face';
-        return {
-            name: doc.name || 'Agent',
-            agency: doc.agency || 'Independent',
-            avatar: avatarUrl,
-            nestScore: doc.nestScore || 90,
-            responseRate: doc.responseRate || 95,
-            avgResponseMin: doc.avgResponseTime || 15,
-            activeListings: 10,
-            badges: ['verified'],
-        };
-    });
+        try {
+            const avatarUrl = doc.photoUrl || doc.avatar || doc.image || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face';
+            return {
+                name: doc.name || 'Agent',
+                agency: doc.agency || 'Independent',
+                avatar: avatarUrl,
+                nestScore: doc.nestScore || 90,
+                responseRate: doc.responseRate || 95,
+                avgResponseMin: doc.avgResponseTime || 15,
+                activeListings: 10,
+                badges: ['verified'],
+            };
+        } catch (e) {
+            return null;
+        }
+    }).filter(Boolean);
 
     // 4. Map Districts
     const mappedDistricts = dbDistricts.map((doc) => {
-        return {
-            name: doc.nameEn || 'District',
-            nameKm: doc.nameKm || '',
-            image: doc.heroImageUrl || 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=600&h=800&fit=crop',
-            medianRent: doc.medianRentSqm ? Math.round(doc.medianRentSqm * 60) : 500, // sample calculation
-            newThisWeek: doc.listingVolume || 10,
-            avgSize: 60,
-            slug: doc.slug || 'district',
-            height: '400px',
-        };
-    });
+        try {
+            return {
+                name: doc.nameEn || 'District',
+                nameKm: doc.nameKm || '',
+                image: doc.heroImageUrl || 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=600&h=800&fit=crop',
+                medianRent: doc.medianRentSqm ? Math.round(doc.medianRentSqm * 60) : 500,
+                newThisWeek: doc.listingVolume || 10,
+                avgSize: 60,
+                slug: doc.slug || 'district',
+                height: '400px',
+            };
+        } catch (e) {
+            return null;
+        }
+    }).filter(Boolean);
 
     return (
         <>
@@ -85,12 +118,12 @@ export default async function HomePage() {
             <div className="section-container py-6">
                 <AdSlot zone="homepage-hero" />
             </div>
-            <FeaturedListings strapiData={mappedListings} />
+            <FeaturedListings strapiData={mappedListings as any[]} />
             <RecentlyRented />
-            <DistrictCards strapiData={mappedDistricts} />
+            <DistrictCards strapiData={mappedDistricts as any[]} />
             <TopDeals />
             <WhyNestKhmer />
-            <TopAgents strapiData={mappedAgents} />
+            <TopAgents strapiData={mappedAgents as any[]} />
         </>
     );
 }

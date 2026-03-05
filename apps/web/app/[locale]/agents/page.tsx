@@ -8,35 +8,46 @@ export default async function AgentsPage(props: { params: Promise<{ locale: stri
     const params = await props.params;
     const { locale } = params;
 
-    // Fetch agents joined with their user profile data
-    const dbAgents = await db
-        .select({
-            id: schema.agents.id,
-            agency: schema.agents.agency,
-            score: schema.agents.nestScore,
-            name: schema.users.name,
-            avatar: schema.users.avatar,
-        })
-        .from(schema.agents)
-        .innerJoin(schema.users, eq(schema.agents.userId, schema.users.id))
-        .limit(20);
+    let dbAgents: any[] = [];
+    try {
+        // Fetch agents joined with their user profile data
+        dbAgents = await db
+            .select({
+                id: schema.agents.id,
+                agency: schema.agents.agency,
+                score: schema.agents.nestScore,
+                name: schema.users.name,
+                avatar: schema.users.avatar,
+            })
+            .from(schema.agents)
+            .innerJoin(schema.users, eq(schema.agents.userId, schema.users.id))
+            .limit(20);
+    } catch (e) {
+        console.error("Agents fetch error:", e);
+    }
 
-    const mappedAgents = dbAgents.map(a => ({
-        name: a.name || 'Professional Agent',
-        agency: a.agency || 'Independent',
-        tier: 'standard', // fallback until tier is in schema/mapped
-        avatar: a.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(a.name || 'Agent')}&background=random`,
-        score: a.score || 85,
-        responseRate: 95,
-        avgResponse: '15m',
-        listings: 0,
-        badges: ['verified', 'quality'],
-        slug: a.id
-    }));
+    const mappedAgents = dbAgents.map(a => {
+        try {
+            return {
+                name: a.name || 'Professional Agent',
+                agency: a.agency || 'Independent',
+                tier: 'standard', // fallback until tier is in schema/mapped
+                avatar: a.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(a.name || 'Agent')}&background=random`,
+                score: a.score || 85,
+                responseRate: 95,
+                avgResponse: '15m',
+                listings: 0,
+                badges: ['verified', 'quality'],
+                slug: a.id
+            };
+        } catch (mapErr) {
+            return null;
+        }
+    }).filter(Boolean);
 
     return (
         <div className="min-h-screen pb-32" style={{ paddingTop: '6rem', background: 'var(--color-surface-50)' }}>
-            <AgentsClient initialAgents={mappedAgents} locale={locale} />
+            <AgentsClient initialAgents={mappedAgents as any[]} locale={locale} />
         </div>
     );
 }

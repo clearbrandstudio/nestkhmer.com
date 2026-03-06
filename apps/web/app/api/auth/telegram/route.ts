@@ -75,11 +75,12 @@ export async function POST(req: NextRequest) {
 
         // 4. Create Better Auth Session manually in the DB
         const sessionToken = crypto.randomUUID();
+        // Better auth requires session tokens to be slightly longer in some versions, but UUID is generally fine
         const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 Days
 
         await db.insert(schema.session).values({
-            id: sessionToken,
-            token: sessionToken,
+            id: crypto.randomUUID(), // Session PK
+            token: sessionToken,     // The actual token used in the cookie
             userId: user.id,
             expiresAt: expiresAt,
             createdAt: new Date(),
@@ -88,28 +89,22 @@ export async function POST(req: NextRequest) {
             userAgent: req.headers.get('user-agent') || null,
         });
 
-        // 5. Build Response and set cookies directly on res (cookieStore won't attach headers to an existing NextResponse)
+        // 5. Build Response and set cookies directly on res 
         const res = NextResponse.json({ success: true, user });
 
-        // Set session cookie directly on the response so Set-Cookie header is included
-        res.cookies.set('better-auth.session_token', sessionToken, {
+        // IMPORTANT: Better Auth looks for cookies named 'better-auth.session_token' 
+        // In production over HTTPS, it looks for '__Secure-better-auth.session_token'
+
+        const isProd = process.env.NODE_ENV === 'production';
+        const cookieName = isProd ? '__Secure-better-auth.session_token' : 'better-auth.session_token';
+
+        res.cookies.set(cookieName, sessionToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
+            secure: isProd,
             sameSite: 'lax',
             path: '/',
             expires: expiresAt,
         });
-
-        // Production secure-prefix cookie (required on many hosting environments)
-        if (process.env.NODE_ENV === 'production') {
-            res.cookies.set('__Secure-better-auth.session_token', sessionToken, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'lax',
-                path: '/',
-                expires: expiresAt,
-            });
-        }
 
         return res;
 

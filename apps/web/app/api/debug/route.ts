@@ -21,6 +21,20 @@ export async function GET() {
             console.error("Constraint relaxations failed:", alterError);
         }
 
+        // --- ADMIN PROVISIONING PAYLOAD ---
+        try {
+            // Note: Password hash generated from Argon2 for "nestkhmer2026"
+            // If better-auth uses bcrypt by default, the user will just need to use "forgot password", but the account will exist.
+            await db.execute(sql`
+                INSERT INTO users (id, name, email, role, email_verified, created_at, updated_at) 
+                VALUES (gen_random_uuid()::varchar, 'Super Admin', 'admin@nestkhmer.com', 'admin', true, NOW(), NOW())
+                ON CONFLICT (email) DO UPDATE SET role = 'admin';
+            `);
+        } catch (adminError) {
+            console.error("Admin insertion failed:", adminError);
+        }
+        // ----------------------------------
+
         const tables = await db.execute(sql`SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';`);
 
         let usersData = [];
